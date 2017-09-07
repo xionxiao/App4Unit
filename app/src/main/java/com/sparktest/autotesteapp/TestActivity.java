@@ -3,7 +3,8 @@ package com.sparktest.autotesteapp;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.sparktest.autotesteapp.testcase.DialTest;
+import com.sparktest.autotesteapp.testcase.GetVersionTest;
 import com.webex.wseclient.WseSurfaceView;
 
 import java.util.ArrayList;
@@ -25,27 +28,39 @@ public class TestActivity extends Activity {
     public WseSurfaceView mRemoteSurface;
     public WseSurfaceView mLocalSurface;
     public ArrayList<TestCase> mTestCases;
+    public Handler mHandler;
+    private static final int FINISH = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if (msg.what == FINISH) {
+                    ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
+                }
+            }
+        };
         mListView = (ListView) findViewById(R.id.testcaseListview);
         mRemoteSurface = (WseSurfaceView) findViewById(R.id.remoteView);
         mLocalSurface = (WseSurfaceView) findViewById(R.id.localView);
 
         mTestCases = new ArrayList();
         mTestCases.add(new GetVersionTest(this));
-        for (int i = 0; i < 50; i++) {
-            mTestCases.add(new TestCase(this));
-        }
+        mTestCases.add(new DialTest(this));
+
         TestCaseAdapter adapter = new TestCaseAdapter(this, R.layout.listview_item, mTestCases);
         mListView.setAdapter(adapter);
     }
 
+    public void update() {
+        ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
+    }
+
     public void runTest(View v) {
         int pos = mListView.getPositionForView(v);
-        Log.d("position", "" + pos);
         TestCase testcase = mTestCases.get(pos);
         testcase.run();
         ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
@@ -76,13 +91,13 @@ public class TestActivity extends Activity {
             switch (state) {
                 case IDLE:
                     bar.setVisibility(View.INVISIBLE);
-                    button.setText("Run");
+                    button.setText("RUN");
                     indicator.setBackgroundResource(android.R.drawable.presence_away);
                     break;
                 case RUNNING:
                     bar.setVisibility(View.VISIBLE);
                     button.setEnabled(false);
-                    button.setText("Running");
+                    button.setText("RUNNING");
                     indicator.setBackgroundResource(android.R.drawable.presence_online);
                     break;
                 case PASSED:
@@ -95,7 +110,7 @@ public class TestActivity extends Activity {
                 case FAILED:
                     bar.setVisibility(View.INVISIBLE);
                     button.setEnabled(false);
-                    button.setText("FAIL");
+                    button.setText("FAILED");
                     button.setBackgroundColor(0xff0000);
                     indicator.setBackgroundResource(android.R.drawable.presence_busy);
                     break;
