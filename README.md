@@ -69,10 +69,10 @@ TestRunner runner = new TestRunner();
 #### 3. Run test/suite
 
 ```java
-# Run a single test
+// Run a single test
 runner.run(MyTestCase.class)
 
-# Run test suite
+// Run test suite
 TestSuite suite = new TestSuite();
 suite.add(MyTestCase.class)
 runner.run(suite);
