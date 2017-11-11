@@ -1,31 +1,25 @@
-package com.sparktest.autotesteapp;
+package com.sparktest.autotesteapp.cases;
 
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import com.sparktest.autotesteapp.framework.TestRunner;
+import com.sparktest.autotesteapp.framework.annotation.*;
+import com.sparktest.autotesteapp.framework.annotation.AfterClass;
+import com.sparktest.autotesteapp.framework.annotation.Before;
+import com.sparktest.autotesteapp.framework.annotation.BeforeClass;
+import com.sparktest.autotesteapp.framework.annotation.Description;
+import com.sparktest.autotesteapp.framework.annotation.Test;
 
-import static org.junit.Assert.assertEquals;
+import javax.inject.Inject;
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
+import static junit.framework.Assert.assertEquals;
 
+@Description("Test for test framework")
+public class TestTest {
+    @Inject
+    TestRunner runner;
 
-public class ExampleUnitTest {
-
-    public ExampleUnitTest() {
+    public TestTest() {
         System.out.println("====== Constructor ======");
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("====== finalize ======");
-        super.finalize();
     }
 
     @BeforeClass
@@ -48,17 +42,25 @@ public class ExampleUnitTest {
         System.out.println("====== Before 2 ======");
     }
 
-    @Test
+    @Test(order = 1)
+    @Description("test case 1")
     public void test1() throws Exception {
         System.out.println("====== Test 1 ======");
         assertEquals(4, 2 + 2);
-        assertEquals("hellow", "world");
     }
 
-    @Test
+    @Test(order = 2)
+    @Description("test case 2")
     public void test2() throws Exception {
         System.out.println("====== Test 2 ======");
-        assertEquals(5, 2 + 2);
+        assertEquals(4, 2 + 1);
+    }
+
+    @Test(order = 3)
+    @Description("test case 2")
+    public void test3() throws Exception {
+        System.out.println("====== Test 3 ======");
+        assertEquals(4, 2 + 2);
     }
 
     @After
