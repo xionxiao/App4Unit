@@ -1,5 +1,6 @@
 package com.sparktest.autotesteapp.cases;
 
+import android.os.Handler;
 
 import com.ciscospark.androidsdk.Result;
 import com.ciscospark.androidsdk.phone.Call;
@@ -13,8 +14,8 @@ import com.sparktest.autotesteapp.utils.TestActor;
 
 import javax.inject.Inject;
 
-@Description("Dial Test")
-public class DialTest {
+@Description("Answer Call Test")
+public class AnswerCallTest {
 
     @Inject
     TestActivity activity;
@@ -26,23 +27,23 @@ public class DialTest {
 
     @Test
     public void run() {
-        actor = TestActor.JwtUser(activity, runner, TestActor.jwtKey2);
+        actor = TestActor.JwtUser(activity, runner, TestActor.jwtKey1);
         actor.login(this::onRegistered);
     }
 
     private void onRegistered(Result result) {
         Ln.d(result.toString());
-        actor.getPhone().dial(TestActor.jwtUser1,
-                MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
-                this::onCallSetup);
+        actor.getPhone().setIncomingCallListener(call -> {
+            actor.onConnected(this::shutdown);
+            actor.onDisconnected(c -> runner.resume());
+            actor.setDefaultCallObserver(call);
+            call.answer(MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
+                    r -> Ln.e("answering call"));
+        });
     }
 
-    private void onCallSetup(Result<Call> result) {
-        Ln.e("Call setup");
-        if (result.isSuccessful()) {
-            Ln.e("call setup success");
-            actor.onDisconnected(c -> runner.resume());
-            actor.setDefaultCallObserver(result.getData());
-        }
+    private void shutdown(Call call) {
+        Handler handler = new Handler();
+        handler.postDelayed(() -> call.hangup(r -> Ln.e("Call hangup")), 5000);
     }
 }

@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.os.Message;
 
 import com.github.benoitdion.ln.Ln;
+import com.sparktest.autotesteapp.framework.Assert;
 import com.sparktest.autotesteapp.framework.TestCase;
 import com.sparktest.autotesteapp.framework.TestListener;
 import com.sparktest.autotesteapp.framework.TestResult;
@@ -39,21 +40,22 @@ public class AppTestRunner extends TestRunner {
     private Handler handler;
     private HandlerThread handlerThread;
     private AtomicInteger atomic = new AtomicInteger(0);
-    private static int index = 0;
+    private TestCase runninTest;
 
 
     public AppTestRunner(Context context) {
         this.activity = (TestActivity) context;
-        Thread.setDefaultUncaughtExceptionHandler(this::handleUncaughtException);
+        //Thread.setDefaultUncaughtExceptionHandler(this::handleUncaughtException);
         handlerThread = new HandlerThread("[TestRunnerThread]");
         handlerThread.start();
         handler = new MyHandler(handlerThread.getLooper());
+        Assert.delegate(s -> Ln.e(s));
         printPermits();
     }
 
     public void printPermits(String head) {
         //Ln.e(head +" =: " + semaphore.availablePermits());
-        Ln.e(head + " =: " + atomic.get());
+        //Ln.e(head + " =: " + atomic.get());
     }
 
     public void printPermits() {
@@ -61,19 +63,21 @@ public class AppTestRunner extends TestRunner {
     }
 
     public synchronized void await() {
-        Ln.e("await [" + Thread.currentThread().getName() + "] " + atomic.incrementAndGet());
+        atomic.incrementAndGet();
+        //Ln.e("await [" + Thread.currentThread().getName() + "] " + atomic.get());
     }
 
-    public synchronized void resume(int index) {
-        Ln.e("resume [" + Thread.currentThread().getName() + "] (" + index + ") " + atomic.decrementAndGet());
+    public synchronized void resume() {
+        atomic.decrementAndGet();
+        //Ln.e("resume [" + Thread.currentThread().getName() + "] (" + index + ") " + atomic.get());
         if (atomic.get() <= 0) {
-            Ln.e("continue [" + Thread.currentThread().getName() + "]");
+            //Ln.e("continue [" + Thread.currentThread().getName() + "]");
             notify();
         }
     }
 
-    private synchronized void pause(int index) {
-        Ln.e("pause (" + index + ") " + atomic.get());
+    private synchronized void pause() {
+        //Ln.e("pause (" + index + ") " + atomic.get());
 
         if (atomic.get() > 0) {
             try {
@@ -82,7 +86,7 @@ public class AppTestRunner extends TestRunner {
                 e.printStackTrace();
             }
         }
-        Ln.e("pause resume [" + Thread.currentThread().getName() + "] (" + index + ") " + atomic.get());
+        //Ln.e("pause resume [" + Thread.currentThread().getName() + "] (" + index + ") " + atomic.get());
     }
 
     public void setInjector(ObjectGraph injector) {
@@ -97,6 +101,7 @@ public class AppTestRunner extends TestRunner {
     private void runInThread(TestCase testCase, TestResult result) {
         result.addListener(new AppListener());
         testCase.setState(Running);
+        runninTest = testCase;
         Class<?> metaClass = testCase.getTestClass();
 
         // Run Started
@@ -127,11 +132,12 @@ public class AppTestRunner extends TestRunner {
             activity.runOnUiThread(() -> result.fireTestFinished());
             // After
             executeAnnotatedMethod(testInstance, After.class);
+            if (runninTest.getState().equals(Failed)) break;
         }
     }
 
     private void invokeMethod(Object object, Method method) {
-        Ln.e(">>> invoke : " + method.getName() + " <<<");
+        //Ln.e(">>> invoke : " + method.getName() + " <<<");
         await();
         activity.runOnUiThread(() -> {
             try {
@@ -141,12 +147,12 @@ public class AppTestRunner extends TestRunner {
             } catch (InvocationTargetException e) {
                 e.getCause().printStackTrace();
                 //TODO: notify failure of the test
+                runninTest.setState(Failed);
             } finally {
-                resume(index);
+                resume();
             }
         });
-        pause(index);
-        index++;
+        pause();
     }
 
     protected Object createInstance(Class<?> metaClass) {
@@ -161,11 +167,10 @@ public class AppTestRunner extends TestRunner {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } finally {
-                resume(index);
+                resume();
             }
         });
-        pause(index);
-        index++;
+        pause();
         return testCase[0];
     }
 
@@ -206,10 +211,11 @@ public class AppTestRunner extends TestRunner {
 
     private void handleUncaughtException(Thread thread, Throwable e) {
         Ln.e("============= Exit =============");
+        String stack = Arrays.toString(thread.getStackTrace());
+        Ln.e(e.toString());
+        Ln.e("[" + thread.getName() + "]" + stack);
         e.getCause().printStackTrace();
-        Ln.e(e);
         if (e instanceof AssertionError) {
-            String stack = Arrays.toString(thread.getStackTrace());
             Ln.e("AssertionError");
             Ln.e(stack.toString());
             Looper.loop();

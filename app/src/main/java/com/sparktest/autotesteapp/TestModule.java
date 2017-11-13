@@ -2,10 +2,13 @@ package com.sparktest.autotesteapp;
 
 import android.content.Context;
 
+import com.sparktest.autotesteapp.cases.AnswerCallTest;
+import com.sparktest.autotesteapp.cases.CallAnswerPairTest;
 import com.sparktest.autotesteapp.cases.DialTest;
 import com.sparktest.autotesteapp.cases.GetVersionTest;
 import com.sparktest.autotesteapp.cases.TestTest;
 import com.sparktest.autotesteapp.framework.TestRunner;
+import com.sparktest.autotesteapp.utils.TestActor;
 
 import javax.inject.Singleton;
 
@@ -17,7 +20,11 @@ import dagger.Provides;
                 TestActivity.class,
                 GetVersionTest.class,
                 TestTest.class,
-                DialTest.class
+                DialTest.class,
+                AnswerCallTest.class,
+                TestActor.class,
+                CallAnswerPairTest.Recipient.class,
+                CallAnswerPairTest.Caller.class
         }
 )
 public class TestModule {

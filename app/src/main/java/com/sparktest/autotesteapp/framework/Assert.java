@@ -30,7 +30,7 @@ public class Assert {
      *
      * @param delegate
      */
-    static void delegate(@Nullable AssertHandler delegate) {
+    static public void delegate(@Nullable AssertHandler delegate) {
         Assert.delegate = delegate;
     }
 
