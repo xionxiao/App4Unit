@@ -81,9 +81,10 @@ runner.run(suite);
 ### Asserts
 
 This test framework reuses [org.junit.Assert] as it's assertion mechanism. To use assertion in TestCase:
+### Assertions
 
 ```java
-import static org.junit.Assert.*
+import static com.sparktest.autotesteapp.framework.*
 ```
 
 ### Injection
@@ -162,3 +163,7 @@ Method annoted with @After will be executed after every @Test method execution.
 ### @Ignore
 
 Method or Class annoted with @Ignore will be ignored.
+
+## Async await/resume
+
+## ThreadSafe
