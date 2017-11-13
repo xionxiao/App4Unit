@@ -17,12 +17,6 @@ import javax.inject.Inject;
 @Description("Answer Call Test")
 public class AnswerCallTest {
 
-    @Inject
-    TestActivity activity;
-
-    @Inject
-    AppTestRunner runner;
-
     TestActor actor;
 
     @Test
@@ -46,4 +40,10 @@ public class AnswerCallTest {
         Handler handler = new Handler();
         handler.postDelayed(() -> call.hangup(r -> Ln.e("Call hangup")), 5000);
     }
+
+    @Inject
+    TestActivity activity;
+
+    @Inject
+    AppTestRunner runner;
 }
