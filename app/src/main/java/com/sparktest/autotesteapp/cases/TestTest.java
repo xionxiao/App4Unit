@@ -2,7 +2,7 @@ package com.sparktest.autotesteapp.cases;
 
 
 import com.sparktest.autotesteapp.framework.TestRunner;
-import com.sparktest.autotesteapp.framework.annotation.*;
+import com.sparktest.autotesteapp.framework.annotation.After;
 import com.sparktest.autotesteapp.framework.annotation.AfterClass;
 import com.sparktest.autotesteapp.framework.annotation.Before;
 import com.sparktest.autotesteapp.framework.annotation.BeforeClass;

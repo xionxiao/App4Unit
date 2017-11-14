@@ -7,7 +7,6 @@ import android.os.Looper;
 import android.os.Message;
 
 import com.github.benoitdion.ln.Ln;
-import com.sparktest.autotesteapp.framework.Assert;
 import com.sparktest.autotesteapp.framework.TestCase;
 import com.sparktest.autotesteapp.framework.TestListener;
 import com.sparktest.autotesteapp.framework.TestResult;
@@ -40,7 +39,7 @@ public class AppTestRunner extends TestRunner {
     private Handler handler;
     private HandlerThread handlerThread;
     private AtomicInteger atomic = new AtomicInteger(0);
-    private TestCase runninTest;
+    private TestCase runningTest;
 
 
     public AppTestRunner(Context context) {
@@ -49,7 +48,7 @@ public class AppTestRunner extends TestRunner {
         handlerThread = new HandlerThread("[TestRunnerThread]");
         handlerThread.start();
         handler = new MyHandler(handlerThread.getLooper());
-        Assert.delegate(s -> Ln.e(s));
+        //Assert.delegate(s -> Ln.e(s));
         printPermits();
     }
 
@@ -101,7 +100,7 @@ public class AppTestRunner extends TestRunner {
     private void runInThread(TestCase testCase, TestResult result) {
         result.addListener(new AppListener());
         testCase.setState(Running);
-        runninTest = testCase;
+        runningTest = testCase;
         Class<?> metaClass = testCase.getTestClass();
 
         // Run Started
@@ -132,7 +131,7 @@ public class AppTestRunner extends TestRunner {
             activity.runOnUiThread(() -> result.fireTestFinished());
             // After
             executeAnnotatedMethod(testInstance, After.class);
-            if (runninTest.getState().equals(Failed)) break;
+            if (runningTest.getState().equals(Failed)) break;
         }
     }
 
@@ -147,7 +146,7 @@ public class AppTestRunner extends TestRunner {
             } catch (InvocationTargetException e) {
                 e.getCause().printStackTrace();
                 //TODO: notify failure of the test
-                runninTest.setState(Failed);
+                runningTest.setState(Failed);
             } finally {
                 resume();
             }
