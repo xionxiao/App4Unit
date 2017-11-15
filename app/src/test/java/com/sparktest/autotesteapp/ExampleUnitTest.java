@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -52,7 +53,6 @@ public class ExampleUnitTest {
     public void test1() throws Exception {
         System.out.println("====== Test 1 ======");
         assertEquals(4, 2 + 2);
-        assertEquals("hellow", "world");
     }
 
     @Test
@@ -74,6 +74,7 @@ public class ExampleUnitTest {
     @AfterClass
     public static void afterClass1() {
         System.out.println("====== After Class 1 ======");
+        //assertFalse(true);
     }
 
     @AfterClass

@@ -3,10 +3,8 @@ package com.sparktest.autotesteapp;
 import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Message;
 
-import com.github.benoitdion.ln.Ln;
+import com.sparktest.autotesteapp.framework.Verify;
 import com.sparktest.autotesteapp.framework.TestCase;
 import com.sparktest.autotesteapp.framework.TestListener;
 import com.sparktest.autotesteapp.framework.TestResult;
@@ -22,7 +20,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -36,48 +33,41 @@ import static com.sparktest.autotesteapp.framework.TestState.Success;
 public class AppTestRunner extends TestRunner {
     private final TestActivity activity;
     private ObjectGraph injector;
-    private Handler handler;
-    private HandlerThread handlerThread;
     private AtomicInteger atomic = new AtomicInteger(0);
     private TestCase runningTest;
+    private HandlerThread runnerThread;
+    private Handler handler;
 
 
     public AppTestRunner(Context context) {
         this.activity = (TestActivity) context;
-        //Thread.setDefaultUncaughtExceptionHandler(this::handleUncaughtException);
-        handlerThread = new HandlerThread("[TestRunnerThread]");
-        handlerThread.start();
-        handler = new MyHandler(handlerThread.getLooper());
-        //Assert.delegate(s -> Ln.e(s));
-        printPermits();
-    }
+        this.runnerThread = new HandlerThread("Runner Thread");
+        runnerThread.start();
+        handler = new Handler(runnerThread.getLooper());
 
-    public void printPermits(String head) {
-        //Ln.e(head +" =: " + semaphore.availablePermits());
-        //Ln.e(head + " =: " + atomic.get());
-    }
-
-    public void printPermits() {
-        printPermits("");
+        Verify.delegate(s -> {
+            runningTest.setState(Failed);
+            resume();
+            try {
+                Thread.sleep(0);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public synchronized void await() {
         atomic.incrementAndGet();
-        //Ln.e("await [" + Thread.currentThread().getName() + "] " + atomic.get());
     }
 
     public synchronized void resume() {
         atomic.decrementAndGet();
-        //Ln.e("resume [" + Thread.currentThread().getName() + "] (" + index + ") " + atomic.get());
         if (atomic.get() <= 0) {
-            //Ln.e("continue [" + Thread.currentThread().getName() + "]");
             notify();
         }
     }
 
-    private synchronized void pause() {
-        //Ln.e("pause (" + index + ") " + atomic.get());
-
+    private synchronized void pause(TestCase testCase) {
         if (atomic.get() > 0) {
             try {
                 wait();
@@ -85,7 +75,11 @@ public class AppTestRunner extends TestRunner {
                 e.printStackTrace();
             }
         }
-        //Ln.e("pause resume [" + Thread.currentThread().getName() + "] (" + index + ") " + atomic.get());
+
+        //TODO: re-throw exceptions if failed
+        if (testCase.getState().equals(Failed)) {
+            throw new Error();
+        }
     }
 
     public void setInjector(ObjectGraph injector) {
@@ -93,84 +87,124 @@ public class AppTestRunner extends TestRunner {
     }
 
     protected void run(TestCase testCase, TestResult result) {
-        // Runner Thread
-        handler.post(() -> runInThread(testCase, result));
+        // Run in runner thread
+        runningTest = testCase;
+        handler.post(() -> runInHandlerThread(testCase, result));
     }
 
-    private void runInThread(TestCase testCase, TestResult result) {
+    private void runInHandlerThread(TestCase testCase, TestResult result) {
         result.addListener(new AppListener());
         testCase.setState(Running);
-        runningTest = testCase;
-        Class<?> metaClass = testCase.getTestClass();
 
-        // Run Started
-        activity.runOnUiThread(() -> result.fireTestRunStarted());
+        try {
+            // Run Started
+            activity.runOnUiThread(() -> result.fireTestRunStarted());
 
-        // BeforeClass
-        executeStaticAnnotatedMethod(metaClass, BeforeClass.class);
+            // BeforeClass
+            executeStaticAnnotatedMethod(testCase, BeforeClass.class);
 
-        runTestMethod(createInstance(metaClass), result);
+            runTestMethod(testCase, result);
 
-        // AfterClass
-        executeStaticAnnotatedMethod(metaClass, AfterClass.class);
-
-        // Run Finished
-        if (testCase.getState() != Failed) testCase.setState(Success);
-        activity.runOnUiThread(() -> result.fireTestRunFinished());
-    }
-
-    protected void runTestMethod(Object testInstance, TestResult result) {
-        List<Method> methodList = getAnnotationMethods(testInstance.getClass(), Test.class);
-        for (Method method : methodList) {
-            // Before
-            executeAnnotatedMethod(testInstance, Before.class);
-            // Test
-            activity.runOnUiThread(() -> result.fireTestStarted());
-            invokeMethod(testInstance, method);
-
-            activity.runOnUiThread(() -> result.fireTestFinished());
-            // After
-            executeAnnotatedMethod(testInstance, After.class);
-            if (runningTest.getState().equals(Failed)) break;
+            // Run Finished
+        } catch (Error e) {
+            //TODO: finally handle all Exceptions here
+            //e.printStackTrace();
+        } finally {
+            try {
+                // AfterClass
+                executeStaticAnnotatedMethod(testCase, AfterClass.class);
+            } catch (Error e) {
+                //e.printStackTrace();
+            } finally {
+                // Run Finished
+                activity.runOnUiThread(() -> result.fireTestRunFinished());
+                if (testCase.getState() != Failed) testCase.setState(Success);
+            }
         }
     }
 
-    private void invokeMethod(Object object, Method method) {
-        //Ln.e(">>> invoke : " + method.getName() + " <<<");
-        await();
-        activity.runOnUiThread(() -> {
+    protected void runTestMethod(TestCase testCase, TestResult result) {
+        Object instance = createTestInstance(testCase);
+        List<Method> methodList = getAnnotationMethods(testCase.getTestClass(), Test.class);
+        for (Method method : methodList) {
+            // Before
+            executeAnnotatedMethod(testCase, instance, Before.class);
+
+            // Test Start
+            activity.runOnUiThread(() -> result.fireTestStarted());
+
             try {
-                method.invoke(object);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.getCause().printStackTrace();
-                //TODO: notify failure of the test
-                runningTest.setState(Failed);
+                // Test
+                invokeMethod(testCase, instance, method);
             } finally {
-                resume();
+
+                // Test Finished
+                activity.runOnUiThread(() -> result.fireTestFinished());
+
+                // After
+                executeAnnotatedMethod(testCase, instance, After.class);
             }
-        });
-        pause();
+        }
     }
 
-    protected Object createInstance(Class<?> metaClass) {
-        final Object[] testCase = new Object[1];
-        await();
-        activity.runOnUiThread(() -> {
+    private void invokeMethod(TestCase testCase, Object instance, Method method) {
+        runSyncOnUiThread(testCase, () -> {
             try {
-                testCase[0] = metaClass.newInstance();
-                injector.inject(testCase[0]);
-            } catch (InstantiationException e) {
-                e.printStackTrace();
+                method.invoke(instance);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
+                //TODO: re-throw in pause()
+            } catch (InvocationTargetException e) {
+                e.getCause().printStackTrace();
+                if (e.getCause() instanceof AssertionError) {
+                    //TODO: notify failure of the test
+                    testCase.setState(Failed);
+                }
             } finally {
                 resume();
             }
         });
-        pause();
-        return testCase[0];
+    }
+
+    private Object createTestInstance(TestCase testCase) {
+        final Object[] obj = {null};
+        runSyncOnUiThread(testCase, () -> {
+            try {
+                obj[0] = testCase.getTestClass().newInstance();
+                injector.inject(obj[0]);
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+                testCase.setState(Failed);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                testCase.setState(Failed);
+                //TODO: notify failure
+            } finally {
+                resume();
+            }
+        });
+        return obj[0];
+    }
+
+    private void runSyncOnUiThread(TestCase testCase, Runnable r) {
+        await();
+        activity.runOnUiThread(r);
+        pause(testCase);
+    }
+
+    private void executeStaticAnnotatedMethod(TestCase testCase, Class<? extends Annotation> T) {
+        List<Method> methods = getAnnotationMethods(testCase.getTestClass(), T,
+                method -> Modifier.isStatic(method.getModifiers()));
+        for (Method method : methods) {
+            invokeMethod(testCase, null, method);
+        }
+    }
+
+    private void executeAnnotatedMethod(TestCase testCase, Object testInstance, Class<? extends Annotation> T) {
+        List<Method> methods = getAnnotationMethods(testCase.getTestClass(), T);
+        for (Method method : methods) {
+            invokeMethod(testCase, testInstance, method);
+        }
     }
 
     interface MethodFilter {
@@ -193,36 +227,6 @@ public class AppTestRunner extends TestRunner {
         return methodList;
     }
 
-    private void executeStaticAnnotatedMethod(Class<?> clazz, Class<? extends Annotation> T) {
-        List<Method> methods = getAnnotationMethods(clazz, T,
-                method -> Modifier.isStatic(method.getModifiers()));
-        for (Method method : methods) {
-            invokeMethod(null, method);
-        }
-    }
-
-    private void executeAnnotatedMethod(Object object, Class<? extends Annotation> T) {
-        List<Method> methods = getAnnotationMethods(object.getClass(), T);
-        for (Method method : methods) {
-            invokeMethod(object, method);
-        }
-    }
-
-    private void handleUncaughtException(Thread thread, Throwable e) {
-        Ln.e("============= Exit =============");
-        String stack = Arrays.toString(thread.getStackTrace());
-        Ln.e(e.toString());
-        Ln.e("[" + thread.getName() + "]" + stack);
-        e.getCause().printStackTrace();
-        if (e instanceof AssertionError) {
-            Ln.e("AssertionError");
-            Ln.e(stack.toString());
-            Looper.loop();
-        }
-
-        System.exit(1);
-    }
-
     private class AppListener extends TestListener {
         @Override
         public void testStarted(com.sparktest.autotesteapp.framework.Test test) throws Exception {
@@ -242,15 +246,6 @@ public class AppTestRunner extends TestRunner {
         @Override
         public void testRunFinished(TestResult result) throws Exception {
             activity.runOnUiThread(() -> activity.update());
-        }
-    }
-
-    private class MyHandler extends Handler {
-        public MyHandler(Looper looper) {
-            super(looper);
-        }
-
-        public void handleMessage(Message msg) {
         }
     }
 }

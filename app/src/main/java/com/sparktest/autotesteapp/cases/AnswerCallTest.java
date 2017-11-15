@@ -21,13 +21,14 @@ public class AnswerCallTest {
 
     @Test
     public void run() {
-        actor = TestActor.JwtUser(activity, runner, TestActor.jwtKey1);
+        actor = TestActor.JwtUser(activity, runner, TestActor.jwtKey2);
         actor.login(this::onRegistered);
     }
 
     private void onRegistered(Result result) {
         Ln.d(result.toString());
         actor.getPhone().setIncomingCallListener(call -> {
+            Ln.e("Incoming call");
             actor.onConnected(this::shutdown);
             actor.onDisconnected(c -> runner.resume());
             actor.setDefaultCallObserver(call);

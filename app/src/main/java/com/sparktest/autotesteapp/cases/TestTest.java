@@ -12,6 +12,7 @@ import com.sparktest.autotesteapp.framework.annotation.Test;
 import javax.inject.Inject;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 
 @Description("Test for test framework")
 public class TestTest {
@@ -76,6 +77,7 @@ public class TestTest {
     @AfterClass
     public static void afterClass1() {
         System.out.println("====== After Class 1 ======");
+        //assertFalse(true);
     }
 
     @AfterClass

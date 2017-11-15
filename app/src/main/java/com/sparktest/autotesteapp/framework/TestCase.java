@@ -21,5 +21,4 @@ public class TestCase extends Test {
     public Class<?> getTestClass() {
         return testClass;
     }
-
 }

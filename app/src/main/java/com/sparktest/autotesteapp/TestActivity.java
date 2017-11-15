@@ -75,11 +75,13 @@ public class TestActivity extends Activity {
 
         TestSuite suite1 = new TestSuite();
         suite1.add(GetVersionTest.class);
+        suite1.add(DialTest.class);
+        suite1.add(AnswerCallTest.class);
         mSuites.add(suite1);
 
-        TestSuite suite3 = new TestSuite();
-        suite3.add(TestTest.class);
-        mSuites.add(suite3);
+        TestSuite suite2 = new TestSuite();
+        suite2.add(TestTest.class);
+        mSuites.add(suite2);
 
         TestCaseAdapter adapter = new TestCaseAdapter(this, mSuites);
         mListView.setAdapter(adapter);

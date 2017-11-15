@@ -39,7 +39,7 @@ public class CallAnswerPairTest extends TestSuite {
         }
 
         /**
-         *  Dial jwtUser1 when register complete
+         * Dial jwtUser1 when register complete
          */
         private void onRegistered(Result result) {
             actor.getPhone().dial(TestActor.jwtUser1,
@@ -77,7 +77,7 @@ public class CallAnswerPairTest extends TestSuite {
         }
 
         /**
-         *  Waiting for incoming call register complete
+         * Waiting for incoming call register complete
          */
         private void onRegistered(Result result) {
             actor.getPhone().setIncomingCallListener(call -> {
