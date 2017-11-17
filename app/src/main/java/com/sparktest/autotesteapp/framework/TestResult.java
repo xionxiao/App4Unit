@@ -24,7 +24,31 @@ public class TestResult {
         listeners.remove(listener);
     }
 
-    public void fire(Statement statement) {
+    public int getRunCount() {
+        return 0;
+    }
+
+    public int getFailureCount() {
+        return 0;
+    }
+
+    public int getIgnoreCount() {
+        return 0;
+    }
+
+    public List<TestFailure> getFailures() {
+        return new ArrayList<TestFailure>();
+    }
+
+    public long getRunTime() {
+        return 0L;
+    }
+
+    public boolean wasSuccessful() {
+        return false;
+    }
+
+    private void fire(Statement statement) {
         try {
             for (TestListener listener : listeners) {
                 statement.evaluate(listener);
@@ -66,7 +90,7 @@ public class TestResult {
 
     public void fireTestFailed() {
         Ln.e("fireTestFailed");
-        fire(listener -> listener.testFailure());
+        fire(listener -> listener.testFailure(null));
     }
 
     public void fireTestIgnored() {

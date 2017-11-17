@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 
+import com.sparktest.autotesteapp.framework.TestFailure;
 import com.sparktest.autotesteapp.framework.Verify;
 import com.sparktest.autotesteapp.framework.TestCase;
 import com.sparktest.autotesteapp.framework.TestListener;
@@ -227,24 +228,49 @@ public class AppTestRunner extends TestRunner {
         return methodList;
     }
 
-    private class AppListener extends TestListener {
+    private class AppListener implements TestListener {
         @Override
-        public void testStarted(com.sparktest.autotesteapp.framework.Test test) throws Exception {
+        public void testStarted(com.sparktest.autotesteapp.framework.Test test) {
             activity.update();
         }
 
         @Override
-        public void testFailure() throws Exception {
+        public void testFinished(TestResult result) {
             activity.runOnUiThread(() -> activity.update());
         }
 
         @Override
-        public void testFinished(TestResult result) throws Exception {
+        public void testFailure(TestFailure failure) {
             activity.runOnUiThread(() -> activity.update());
         }
 
         @Override
-        public void testRunFinished(TestResult result) throws Exception {
+        public void testAssumptionFailure(TestFailure failure) {
+
+        }
+
+        @Override
+        public void testIgnored() throws Exception {
+
+        }
+
+        @Override
+        public void testSuiteStarted(com.sparktest.autotesteapp.framework.Test test) {
+
+        }
+
+        @Override
+        public void testSuiteFinished(TestResult result) {
+
+        }
+
+        @Override
+        public void testRunStarted(com.sparktest.autotesteapp.framework.Test test) {
+
+        }
+
+        @Override
+        public void testRunFinished(TestResult result) {
             activity.runOnUiThread(() -> activity.update());
         }
     }

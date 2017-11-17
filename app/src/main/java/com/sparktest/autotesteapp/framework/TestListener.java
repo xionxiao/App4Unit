@@ -1,28 +1,22 @@
 package com.sparktest.autotesteapp.framework;
 
 
-public class TestListener {
-    public void testSuiteStarted(Test test) throws Exception {
-    }
+public interface TestListener {
+    void testSuiteStarted(Test test);
 
-    public void testSuiteFinished(TestResult result) throws Exception {
-    }
+    void testSuiteFinished(TestResult result);
 
-    public void testRunStarted(Test test) throws Exception {
-    }
+    void testRunStarted(Test test);
 
-    public void testRunFinished(TestResult result) throws Exception {
-    }
+    void testRunFinished(TestResult result);
 
-    public void testStarted(Test Test) throws Exception {
-    }
+    void testStarted(Test Test);
 
-    public void testFinished(TestResult result) throws Exception {
-    }
+    void testFinished(TestResult result);
 
-    public void testFailure() throws Exception {
-    }
+    void testFailure(TestFailure failure);
 
-    public void testIgnored() throws Exception {
-    }
+    void testAssumptionFailure(TestFailure failure);
+
+    void testIgnored() throws Exception;
 }

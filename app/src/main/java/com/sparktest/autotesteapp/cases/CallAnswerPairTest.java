@@ -94,7 +94,7 @@ public class CallAnswerPairTest extends TestSuite {
          */
         private void shutdown(Call call) {
             Handler handler = new Handler();
-            handler.postDelayed(() -> call.hangup(r -> Ln.e("Call hangup")), 5000);
+            handler.postDelayed(() -> call.hangup(r -> Ln.e("Call hangup")), 10000);
         }
 
         @Inject
