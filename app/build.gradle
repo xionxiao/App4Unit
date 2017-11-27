@@ -29,6 +29,7 @@ android {
         exclude 'META-INF/license.txt'
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/rxjava.properties'
     }
     splits {
         abi {
@@ -53,6 +54,8 @@ dependencies {
     annotationProcessor 'com.squareup.dagger:dagger-compiler:1.2.5'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.ciscospark:androidsdk:0.1.0'
+    compile('com.ciscospark:androidsdk:0.2.0-SNAPSHOT@aar', {
+        transitive = true
+    })
     testCompile 'junit:junit:4.12'
 }

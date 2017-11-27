@@ -1,16 +1,11 @@
 package com.sparktest.autotesteapp;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,12 +18,21 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.github.benoitdion.ln.Ln;
-import com.sparktest.autotesteapp.cases.AnswerCallTest;
-import com.sparktest.autotesteapp.cases.CallAnswerPairTest;
-import com.sparktest.autotesteapp.cases.DialTest;
-import com.sparktest.autotesteapp.cases.GetVersionTest;
-import com.sparktest.autotesteapp.cases.TestTest;
+import com.sparktest.autotesteapp.cases.TestCaseAudioCall;
+import com.sparktest.autotesteapp.cases.TestCaseAudioCallUnmuteVideo;
+import com.sparktest.autotesteapp.cases.TestCaseCallRejectWhenInit;
+import com.sparktest.autotesteapp.cases.TestCaseCallRejectWhenRinging;
+import com.sparktest.autotesteapp.cases.TestCaseCallSequence_1;
+import com.sparktest.autotesteapp.cases.TestCaseCallSequence_2;
+import com.sparktest.autotesteapp.cases.TestCaseCallWhenConnected;
+import com.sparktest.autotesteapp.cases.TestCaseCallWhenRinging;
+import com.sparktest.autotesteapp.cases.TestCaseHangUpDisconnectedCall;
+import com.sparktest.autotesteapp.cases.TestCaseMultiParticipants_1;
+import com.sparktest.autotesteapp.cases.TestCaseMultiParticipants_2;
+import com.sparktest.autotesteapp.cases.TestCaseMuteAudioVideo;
+import com.sparktest.autotesteapp.cases.TestCaseRoom;
+import com.sparktest.autotesteapp.cases.TestCaseTeamAndMemberShip;
+import com.sparktest.autotesteapp.cases.TestCaseWebhooks;
 import com.sparktest.autotesteapp.framework.Test;
 import com.sparktest.autotesteapp.framework.TestCase;
 import com.sparktest.autotesteapp.framework.TestRunner;
@@ -76,49 +80,25 @@ public class TestActivity extends Activity {
         ((AppTestRunner) mRunner).setInjector(objectGraph);
 
         mSuites = new ArrayList<>();
-        TestSuite suite = new CallAnswerPairTest();
-        mSuites.add(suite);
-
-        TestSuite suite1 = new TestSuite();
-        suite1.add(GetVersionTest.class);
-        suite1.add(DialTest.class);
-        suite1.add(AnswerCallTest.class);
-        mSuites.add(suite1);
-
-        TestSuite suite2 = new TestSuite();
-        suite2.add(TestTest.class);
-        mSuites.add(suite2);
+        mSuites.add(new TestCaseCallWhenRinging());
+        mSuites.add(new TestCaseCallWhenConnected());
+        mSuites.add(new TestCaseCallRejectWhenRinging());
+        mSuites.add(new TestCaseCallRejectWhenInit());
+        mSuites.add(new TestCaseHangUpDisconnectedCall());
+        mSuites.add(new TestCaseAudioCall());
+        mSuites.add(new TestCaseAudioCallUnmuteVideo());
+        mSuites.add(new TestCaseMuteAudioVideo());
+        mSuites.add(new TestCaseRoom());
+        mSuites.add(new TestCaseWebhooks());
+        mSuites.add(new TestCaseTeamAndMemberShip());
+        mSuites.add(new TestCaseMultiParticipants_1());
+        mSuites.add(new TestCaseMultiParticipants_2());
+        mSuites.add(new TestCaseCallSequence_1());
+        mSuites.add(new TestCaseCallSequence_2());
+        mSuites.add(new TestCaseCallSequence_2());
 
         TestCaseAdapter adapter = new TestCaseAdapter(this, mSuites);
         mListView.setAdapter(adapter);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //requestPermissions();
-        new Handler(Looper.myLooper()).postDelayed(()->requestPermissions(), 2000);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        Ln.e("onRequestPermissionsResult");
-    }
-
-    public void requestPermissions() {
-        int permissionCamera = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA);
-        int permissionAudio = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.RECORD_AUDIO);
-
-        if (permissionCamera != PackageManager.PERMISSION_GRANTED
-                || permissionAudio != PackageManager.PERMISSION_GRANTED) {
-            String[] permissions = {
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.RECORD_AUDIO
-            };
-            ActivityCompat.requestPermissions(this, permissions, 0);
-        }
     }
 
     public void update() {
