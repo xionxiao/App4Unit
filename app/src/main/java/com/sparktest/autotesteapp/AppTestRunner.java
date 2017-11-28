@@ -4,12 +4,12 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 
-import com.sparktest.autotesteapp.framework.TestFailure;
-import com.sparktest.autotesteapp.framework.Verify;
 import com.sparktest.autotesteapp.framework.TestCase;
+import com.sparktest.autotesteapp.framework.TestFailure;
 import com.sparktest.autotesteapp.framework.TestListener;
 import com.sparktest.autotesteapp.framework.TestResult;
 import com.sparktest.autotesteapp.framework.TestRunner;
+import com.sparktest.autotesteapp.framework.Verify;
 import com.sparktest.autotesteapp.framework.annotation.After;
 import com.sparktest.autotesteapp.framework.annotation.AfterClass;
 import com.sparktest.autotesteapp.framework.annotation.Before;
@@ -64,6 +64,7 @@ public class AppTestRunner extends TestRunner {
     public synchronized void resume() {
         atomic.decrementAndGet();
         if (atomic.get() <= 0) {
+            atomic.set(0);
             notify();
         }
     }
@@ -79,7 +80,7 @@ public class AppTestRunner extends TestRunner {
 
         //TODO: re-throw exceptions if failed
         if (testCase.getState().equals(Failed)) {
-            throw new Error();
+            throw new Error("********** Failed ***********");
         }
     }
 
@@ -109,7 +110,7 @@ public class AppTestRunner extends TestRunner {
             // Run Finished
         } catch (Error e) {
             //TODO: finally handle all Exceptions here
-            //e.printStackTrace();
+            e.printStackTrace();
         } finally {
             try {
                 // AfterClass
