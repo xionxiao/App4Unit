@@ -74,8 +74,7 @@ public class TestCaseAudioCallUnmuteVideo extends TestSuite {
         }
 
         private void onConnected(Call call){
-            Ln.d("Callee, onConnected");
-            handler.removeCallbacksAndMessages(null);
+            Ln.d("Caller, onConnected");
             handler.postDelayed(() -> {
                 Ln.d("Caller sendingVideo： " + call.isSendingVideo() +
                         "  receivingVideo: " + call.isReceivingVideo());
@@ -90,7 +89,7 @@ public class TestCaseAudioCallUnmuteVideo extends TestSuite {
             Verify.verifyFalse(event instanceof CallObserver.RemoteVideoViewSizeChanged ||
                     (event instanceof CallObserver.RemoteSendingVideoEvent && ((CallObserver.RemoteSendingVideoEvent)event).isSending()) ||
                     (event instanceof CallObserver.SendingVideo && ((CallObserver.SendingVideo)event).isSending()) ||
-                    (event instanceof CallObserver.ReceivingVideo && ((CallObserver.ReceivingVideo)event).isSending()));
+                    (event instanceof CallObserver.ReceivingVideo && ((CallObserver.ReceivingVideo)event).isReceiving()));
         }
 
         @Inject
@@ -137,7 +136,6 @@ public class TestCaseAudioCallUnmuteVideo extends TestSuite {
 
         private void onConnected(Call call){
             Ln.d("Callee, onConnected");
-            handler.removeCallbacksAndMessages(null);
             handler.postDelayed(() -> {
                 Ln.d("Callee sendingVideo： " + call.isSendingVideo() +
                         "  receivingVideo: " + call.isReceivingVideo());
@@ -153,7 +151,7 @@ public class TestCaseAudioCallUnmuteVideo extends TestSuite {
             Verify.verifyFalse(event instanceof CallObserver.RemoteVideoViewSizeChanged ||
                     (event instanceof CallObserver.RemoteSendingVideoEvent && ((CallObserver.RemoteSendingVideoEvent)event).isSending()) ||
                     (event instanceof CallObserver.SendingVideo && ((CallObserver.SendingVideo)event).isSending()) ||
-                    (event instanceof CallObserver.ReceivingVideo && ((CallObserver.ReceivingVideo)event).isSending()));
+                    (event instanceof CallObserver.ReceivingVideo && ((CallObserver.ReceivingVideo)event).isReceiving()));
         }
 
         @Inject

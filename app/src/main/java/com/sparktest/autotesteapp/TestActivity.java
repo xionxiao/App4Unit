@@ -27,6 +27,7 @@ import com.sparktest.autotesteapp.cases.TestCaseCallSequence_2;
 import com.sparktest.autotesteapp.cases.TestCaseCallWhenConnected;
 import com.sparktest.autotesteapp.cases.TestCaseCallWhenRinging;
 import com.sparktest.autotesteapp.cases.TestCaseHangUpDisconnectedCall;
+import com.sparktest.autotesteapp.cases.TestCaseKeepCall;
 import com.sparktest.autotesteapp.cases.TestCaseMultiParticipants_1;
 import com.sparktest.autotesteapp.cases.TestCaseMultiParticipants_2;
 import com.sparktest.autotesteapp.cases.TestCaseMuteAudioVideo;
@@ -88,14 +89,14 @@ public class TestActivity extends Activity {
         mSuites.add(new TestCaseAudioCall());
         mSuites.add(new TestCaseAudioCallUnmuteVideo());
         mSuites.add(new TestCaseMuteAudioVideo());
-        mSuites.add(new TestCaseRoom());
+        //mSuites.add(new TestCaseRoom());
         mSuites.add(new TestCaseWebhooks());
         mSuites.add(new TestCaseTeamAndMemberShip());
         mSuites.add(new TestCaseMultiParticipants_1());
         mSuites.add(new TestCaseMultiParticipants_2());
         mSuites.add(new TestCaseCallSequence_1());
         mSuites.add(new TestCaseCallSequence_2());
-        mSuites.add(new TestCaseCallSequence_2());
+        mSuites.add(new TestCaseKeepCall());
 
         TestCaseAdapter adapter = new TestCaseAdapter(this, mSuites);
         mListView.setAdapter(adapter);

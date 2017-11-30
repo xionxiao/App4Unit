@@ -75,7 +75,6 @@ public class TestCaseKeepCall extends TestSuite {
                 call.setSendingAudio(false);
                 call.setSendingVideo(false);
             }
-            mHandler.removeCallbacksAndMessages(null);
             mHandler.postDelayed(() -> {
                 call.hangup(r -> Ln.d("Caller hangup"));
             }, 30000);

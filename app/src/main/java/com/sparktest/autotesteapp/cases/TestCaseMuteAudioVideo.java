@@ -77,7 +77,6 @@ public class TestCaseMuteAudioVideo extends TestSuite {
             Call call = event.getCall();
             if (event instanceof CallObserver.RemoteSendingVideoEvent){
                 if (!((CallObserver.RemoteSendingVideoEvent)event).isSending() && !isMuteStatus){
-                    handler.removeCallbacksAndMessages(null);
                     handler.postDelayed(() -> {
                         isMuteStatus = true;
                         call.setSendingVideo(false);
@@ -88,7 +87,6 @@ public class TestCaseMuteAudioVideo extends TestSuite {
                 }
             }else if (event instanceof CallObserver.RemoteSendingAudioEvent) {
                 if (((CallObserver.RemoteSendingAudioEvent) event).isSending() && isMuteStatus) {
-                    handler.removeCallbacksAndMessages(null);
                     handler.postDelayed(() -> {
                         isMuteStatus = false;
                         call.setSendingVideo(true);
@@ -102,9 +100,9 @@ public class TestCaseMuteAudioVideo extends TestSuite {
             }else if (event instanceof CallObserver.SendingAudio){
                 Verify.verifyEquals(isMuteStatus, !((CallObserver.SendingAudio)event).isSending());
             }else if (event instanceof CallObserver.ReceivingVideo){
-                Verify.verifyEquals(isMuteStatus, !((CallObserver.ReceivingVideo)event).isSending());
+                Verify.verifyEquals(isMuteStatus, !((CallObserver.ReceivingVideo)event).isReceiving());
             }else if (event instanceof CallObserver.ReceivingAudio){
-                Verify.verifyEquals(isMuteStatus, !((CallObserver.ReceivingAudio)event).isSending());
+                Verify.verifyEquals(isMuteStatus, !((CallObserver.ReceivingAudio)event).isReceiving());
             }
 
         }
@@ -155,7 +153,6 @@ public class TestCaseMuteAudioVideo extends TestSuite {
             Ln.d("Callee onMediaChanged: " + event + "  isMuteStatus: " + isMuteStatus);
             Call call = event.getCall();
             if (event instanceof CallObserver.RemoteVideoViewSizeChanged) {
-                handler.removeCallbacksAndMessages(null);
                 handler.postDelayed(() -> {
                     isMuteStatus = true;
                     call.setSendingVideo(false);
@@ -168,12 +165,11 @@ public class TestCaseMuteAudioVideo extends TestSuite {
             }else if (event instanceof CallObserver.SendingAudio){
                 Verify.verifyEquals(isMuteStatus, !((CallObserver.SendingAudio)event).isSending());
             }else if (event instanceof CallObserver.ReceivingVideo){
-                Verify.verifyEquals(isMuteStatus, !((CallObserver.ReceivingVideo)event).isSending());
+                Verify.verifyEquals(isMuteStatus, !((CallObserver.ReceivingVideo)event).isReceiving());
             }else if (event instanceof CallObserver.ReceivingAudio){
-                Verify.verifyEquals(isMuteStatus, !((CallObserver.ReceivingAudio)event).isSending());
+                Verify.verifyEquals(isMuteStatus, !((CallObserver.ReceivingAudio)event).isReceiving());
             }else if (event instanceof CallObserver.RemoteSendingVideoEvent){
                 if (!((CallObserver.RemoteSendingVideoEvent)event).isSending() && isMuteStatus){
-                    handler.removeCallbacksAndMessages(null);
                     handler.postDelayed(() -> {
                         isMuteStatus = false;
                         call.setSendingVideo(true);
@@ -184,7 +180,6 @@ public class TestCaseMuteAudioVideo extends TestSuite {
                 }
             }else if (event instanceof CallObserver.RemoteSendingAudioEvent) {
                 if (((CallObserver.RemoteSendingAudioEvent) event).isSending() && !isMuteStatus) {
-                    handler.removeCallbacksAndMessages(null);
                     handler.postDelayed(() -> call.hangup(r -> Ln.d("Callee hangup")), 3000);
                 }
             }

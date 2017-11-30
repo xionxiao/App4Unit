@@ -128,7 +128,6 @@ public class TestCaseAudioCall extends TestSuite {
 
         private void onConnected(Call call){
             Ln.d("Callee, onConnected");
-            handler.removeCallbacksAndMessages(null);
             handler.postDelayed(() -> {
                 Ln.d("sendingVideo： " + call.isSendingVideo() +
                     "  receivingVideo: " + call.isReceivingVideo());

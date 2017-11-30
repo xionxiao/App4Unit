@@ -120,7 +120,7 @@ public class TestCaseMultiParticipants_1 extends TestSuite {
                     actor.getPhone().dial(TestActor.jwtUser1,
                             MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                             this::onCallSetup);
-                }, 15000);
+                }, 5000);
             } else {
                 Verify.verifyTrue(false);
             }
@@ -188,14 +188,14 @@ public class TestCaseMultiParticipants_1 extends TestSuite {
                     call.acknowledge(c -> Ln.d("Callee acknowledge call"));
                     call.answer(MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                             r -> {
-                                Ln.e("Callee answering call: " + result.isSuccessful());
-                                if (!answeredOnce && result.isSuccessful()){
+                                Ln.e("Callee answering call: " + r.isSuccessful());
+                                if (r.isSuccessful()){
+                                    Verify.verifyTrue(!answeredOnce);
                                     answeredOnce = true;
                                     actor.onConnected(this::onConnected);
                                     actor.onDisconnected(c -> actor.logout());
                                     actor.setDefaultCallObserver(call);
-                                }else if (answeredOnce && result.isSuccessful()){
-                                    Verify.verifyTrue(false);
+                                }else{
                                     call.reject(result1 -> Ln.d("Callee reject call when busy"));
                                 }
                     });
