@@ -121,17 +121,20 @@ public class TestActor {
     }
 
     public void logout(){
-        if (phone != null)
-            phone.deregister(result -> {
-                if (result.isSuccessful()) {
-                    // Device registered
-                    Ln.e("unregister success");
-                } else {
-                    // Device not registered, and calls will not be sent or received
-                    Ln.e("unregister failed");
-                }
-                runner.resume();
-            });
+        new android.os.Handler().postDelayed(()->{
+            if (phone != null) {
+                phone.deregister(result -> {
+                    if (result.isSuccessful()) {
+                        // Device registered
+                        Ln.e("unregister success");
+                    } else {
+                        // Device not registered, and calls will not be sent or received
+                        Ln.e("unregister failed");
+                    }
+                    runner.resume();
+                });
+            }
+        }, 2000);
     }
 
     public Phone getPhone() {
