@@ -1,11 +1,16 @@
 package com.sparktest.autotesteapp;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +36,6 @@ import com.sparktest.autotesteapp.cases.TestCaseKeepCall;
 import com.sparktest.autotesteapp.cases.TestCaseMultiParticipants_1;
 import com.sparktest.autotesteapp.cases.TestCaseMultiParticipants_2;
 import com.sparktest.autotesteapp.cases.TestCaseMuteAudioVideo;
-import com.sparktest.autotesteapp.cases.TestCaseRoom;
 import com.sparktest.autotesteapp.cases.TestCaseTeamAndMemberShip;
 import com.sparktest.autotesteapp.cases.TestCaseWebhooks;
 import com.sparktest.autotesteapp.framework.Test;
@@ -92,8 +96,8 @@ public class TestActivity extends Activity {
         //mSuites.add(new TestCaseRoom());
         mSuites.add(new TestCaseWebhooks());
         mSuites.add(new TestCaseTeamAndMemberShip());
-        mSuites.add(new TestCaseMultiParticipants_1());
-        mSuites.add(new TestCaseMultiParticipants_2());
+        //mSuites.add(new TestCaseMultiParticipants_1());
+        //mSuites.add(new TestCaseMultiParticipants_2());
         mSuites.add(new TestCaseCallSequence_1());
         mSuites.add(new TestCaseCallSequence_2());
         mSuites.add(new TestCaseKeepCall());
@@ -102,23 +106,52 @@ public class TestActivity extends Activity {
         mListView.setAdapter(adapter);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //requestPermissions();
+        new Handler(Looper.myLooper()).postDelayed(() -> requestPermissions(), 2000);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    }
+
+    public void requestPermissions() {
+        int permissionCamera = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA);
+        int permissionAudio = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO);
+
+        if (permissionCamera != PackageManager.PERMISSION_GRANTED
+                || permissionAudio != PackageManager.PERMISSION_GRANTED) {
+            String[] permissions = {
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.RECORD_AUDIO
+            };
+            ActivityCompat.requestPermissions(this, permissions, 0);
+        }
+    }
+
+
     public void update() {
         ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
     }
 
     public void runTest(View v) {
         int pos = mListView.getPositionForView(v);
-        Test testcase = mSuites.get(pos);
-        if (testcase instanceof TestSuite) {
+        Test test = mSuites.get(pos);
+        if (test instanceof TestSuite) {
             ViewGroup parent = (ViewGroup) v.getParent();
             ViewGroup parent_parent = (ViewGroup) parent.getParent();
             int index = parent_parent.indexOfChild(parent);
-            mRunner.run((TestCase) ((TestSuite) testcase).get(index));
+            mRunner.run((TestCase) ((TestSuite) test).get(index));
         } else {
-            mRunner.run((TestCase) testcase);
+            mRunner.run((TestCase) test);
         }
 
         this.update();
+        mListView.smoothScrollToPositionFromTop(pos, 0, 500);
     }
 
     private class TestCaseAdapter extends ArrayAdapter<TestSuite> {
@@ -133,18 +166,21 @@ public class TestActivity extends Activity {
             TestSuite testSuite = getItem(position);
 
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.listview_testsuite, null);
-            ((TextView) convertView.findViewById(R.id.textView)).setText(testSuite.getDescription());
+            String desc = String.format("%d", position);
+            convertView.setContentDescription(desc);
+            desc = String.format("%d. %s", position + 1, testSuite.getDescription());
+            ((TextView) convertView.findViewById(R.id.textView)).setText(desc);
             LinearLayout layout = (LinearLayout) convertView.findViewById(R.id.subListView);
             for (TestCase t : testSuite.cases()) {
                 View child = getLayoutInflater().inflate(R.layout.listview_testcase, null);
+                desc = String.format("%d", testSuite.cases().indexOf(t));
+                child.setContentDescription(desc);
                 ViewHolder holder = ViewHolder.createInstance(child);
                 ViewHolder.updateViewHolder(holder, t);
                 layout.addView(child);
             }
-
             return convertView;
         }
-
     }
 
     static class ViewHolder {
@@ -166,6 +202,7 @@ public class TestActivity extends Activity {
 
         static void updateViewHolder(ViewHolder holder, TestCase testCase) {
             holder.textView.setText(testCase.getDescription());
+            holder.textView.setContentDescription(testCase.getTestClass().getName());
 
             TestState state = testCase.getState();
             switch (state) {

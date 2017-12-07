@@ -7,20 +7,17 @@ import android.webkit.WebView;
 import com.ciscospark.androidsdk.CompletionHandler;
 import com.ciscospark.androidsdk.Spark;
 import com.ciscospark.androidsdk.auth.JWTAuthenticator;
-import com.ciscospark.androidsdk.auth.OAuthAuthenticator;
 import com.ciscospark.androidsdk.auth.OAuthWebViewAuthenticator;
-import com.ciscospark.androidsdk.message.MessageClient;
 import com.ciscospark.androidsdk.phone.Call;
 import com.ciscospark.androidsdk.phone.CallObserver;
 import com.ciscospark.androidsdk.phone.Phone;
-import com.ciscospark.androidsdk.room.RoomClient;
 import com.github.benoitdion.ln.Ln;
 import com.sparktest.autotesteapp.AppTestRunner;
 import com.sparktest.autotesteapp.R;
 import com.sparktest.autotesteapp.TestActivity;
 import com.sparktest.autotesteapp.framework.Verify;
 
-import java.util.logging.Handler;
+import static com.sparktest.autotesteapp.framework.Verify.verifyTrue;
 
 public class TestActor {
     public static String jwtKey1 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzcGFya1NES1Rlc3Q5IiwibmFtZSI6InNwYXJrU0RLVGVzdDkiLCJpc3MiOiJjZDVjOWFmNy04ZWQzLTRlMTUtOTcwNS0wMjVlZjMwYjFiNmEifQ.4u5cET50gjX8RT3NxTj98ffQ0WnlMm0vr7AxsfZrVOg";
@@ -81,6 +78,7 @@ public class TestActor {
             } else {
                 // Device not registered, and calls will not be sent or received
                 Ln.e("register failed");
+                verifyTrue(false);
                 runner.resume();
             }
         });
@@ -95,7 +93,7 @@ public class TestActor {
         WebView webView = (WebView) activity.findViewById(R.id.OAuthWebView);
         webView.setVisibility(View.VISIBLE);
         auth.authorize(webView, result -> {
-            if (result.isSuccessful()){
+            if (result.isSuccessful()) {
                 Ln.d("loginBySparkId isSuccessful!");
                 phone = spark.phone();
                 phone.register(r -> {
@@ -109,7 +107,7 @@ public class TestActor {
                         runner.resume();
                     }
                 });
-            }else{
+            } else {
                 handler.onComplete(result);
                 runner.resume();
             }
@@ -120,8 +118,8 @@ public class TestActor {
         runner.await();
     }
 
-    public void logout(){
-        new android.os.Handler().postDelayed(()->{
+    public void logout() {
+        new android.os.Handler().postDelayed(() -> {
             if (phone != null) {
                 phone.deregister(result -> {
                     if (result.isSuccessful()) {
