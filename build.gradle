@@ -17,6 +17,7 @@ allprojects {
     repositories {
         //mavenLocal();
         //mavenCentral()
+        google()
         jcenter()
 //        maven {
 //            url 'https://devhub.cisco.com/artifactory/sparksdk-SNAPSHOT/'
