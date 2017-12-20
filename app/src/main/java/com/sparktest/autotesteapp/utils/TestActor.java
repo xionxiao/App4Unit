@@ -8,6 +8,7 @@ import com.ciscospark.androidsdk.CompletionHandler;
 import com.ciscospark.androidsdk.Spark;
 import com.ciscospark.androidsdk.auth.JWTAuthenticator;
 import com.ciscospark.androidsdk.auth.OAuthAuthenticator;
+import com.ciscospark.androidsdk.auth.OAuthTestUserAuthenticator;
 import com.ciscospark.androidsdk.auth.OAuthWebViewAuthenticator;
 import com.ciscospark.androidsdk.message.MessageClient;
 import com.ciscospark.androidsdk.phone.Call;
@@ -32,11 +33,13 @@ public class TestActor {
     public static String jwtUserID1 = "dce2861a-debb-4834-802b-6f08515c0bf2";
     public static String jwtUserID2 = "11bc13ac-5a84-4a1f-a1be-4b0910e8d10d";
     public static String jwtUserID3 = "6a884170-7a18-470b-a006-52ab4c72b47a";
+    public static String SparkUserEmail = "sparksdktestuser10@tropo.com";
+    public static String SparkUserName = "sparksdktestuser10";
+    public static String SparkUserPwd = "Test123@cisco";
     public static final String CLIENT_ID = "C416dd36dd57b536a35816978e4f063a98849d285ca191f5566a32c0f0c3481ab";
     public static final String CLIENT_SEC = "bc851e0f4d4bd62c020a45de08e374101910200d43096f32d14b9e08164adac7";
     public static final String REDIRECT_URL = "KitchenSink://response";
     public static final String SCOPE = "spark:all";
-    public static final String TOKEN = "MTkyOTc2OTQtMGUwOC00Y2NlLWE2YmYtMDcxY2FlMDFkMTFlMmMyNWQzMjAtOTJk";
     TestActivity activity;
     AppTestRunner runner;
 
@@ -90,11 +93,12 @@ public class TestActor {
     }
 
     public void loginBySparkId(CompletionHandler<Void> handler) {
-        OAuthWebViewAuthenticator auth = new OAuthWebViewAuthenticator(CLIENT_ID, CLIENT_SEC, REDIRECT_URL, SCOPE);
+        OAuthTestUserAuthenticator auth = new OAuthTestUserAuthenticator(CLIENT_ID, CLIENT_SEC, SCOPE, REDIRECT_URL,
+                SparkUserEmail, SparkUserName, SparkUserPwd);
         spark = new Spark(activity.getApplication(), auth);
-        WebView webView = (WebView) activity.findViewById(R.id.OAuthWebView);
-        webView.setVisibility(View.VISIBLE);
-        auth.authorize(webView, result -> {
+        //WebView webView = (WebView) activity.findViewById(R.id.OAuthWebView);
+        //webView.setVisibility(View.VISIBLE);
+        auth.authorize(result -> {
             if (result.isSuccessful()){
                 Ln.d("loginBySparkId isSuccessful!");
                 phone = spark.phone();
@@ -113,7 +117,7 @@ public class TestActor {
                 handler.onComplete(result);
                 runner.resume();
             }
-            webView.setVisibility(View.INVISIBLE);
+            //webView.setVisibility(View.INVISIBLE);
         });
 
         Ln.e("Waite for register");

@@ -89,7 +89,7 @@ public class TestActivity extends Activity {
         mSuites.add(new TestCaseAudioCall());
         mSuites.add(new TestCaseAudioCallUnmuteVideo());
         mSuites.add(new TestCaseMuteAudioVideo());
-        //mSuites.add(new TestCaseRoom());
+        mSuites.add(new TestCaseRoom());
         mSuites.add(new TestCaseWebhooks());
         mSuites.add(new TestCaseTeamAndMemberShip());
         mSuites.add(new TestCaseMultiParticipants_1());
@@ -100,6 +100,10 @@ public class TestActivity extends Activity {
 
         TestCaseAdapter adapter = new TestCaseAdapter(this, mSuites);
         mListView.setAdapter(adapter);
+
+        android.media.AudioManager am = (android.media.AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        am.setMode(android.media.AudioManager.MODE_IN_COMMUNICATION);
+        am.setSpeakerphoneOn(false);
     }
 
     public void update() {
