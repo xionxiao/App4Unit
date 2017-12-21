@@ -12,7 +12,7 @@ device_list = ["HT7360201945","988627323038534235"]
 config = {
     'platformName': 'Android',
     'app': APK_PATH,
-    'newCommandTimeout': 3600
+    'newCommandTimeout': 60
 }
 
 remote = 'http://127.0.0.1:4723/wd/hub'
