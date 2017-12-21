@@ -14,8 +14,25 @@ Automatic testing application framework for Spark android SDK.
 
 ### 2. Compile & Run
 
+#### Standalone
+
 Clone the repo and import to Android Studio. Connect real device and Run AutoTestApp.
 
+#### Auto run with multiple devices
+
+1. Start Appium Server
+
+1. Get device list with adb
+
+```shell
+adb devices
+```
+
+1. Run autotest script
+
+```shell
+python script/autotest.py -d <device serail numbers seperated by comma>
+```
 
 ## Usage
 

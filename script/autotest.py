@@ -12,7 +12,7 @@ device_list = ["HT7360201945","988627323038534235"]
 config = {
     'platformName': 'Android',
     'app': APK_PATH,
-    'newCommandTimeout': 60
+    'newCommandTimeout': 300
 }
 
 remote = 'http://127.0.0.1:4723/wd/hub'
@@ -184,7 +184,7 @@ def run_suite(devices, suite_index):
 
 if __name__ == '__main__':
     try:
-        opts, args = getopt.getopt(sys.argv[1:],"p:d:a:o:")
+        opts, args = getopt.getopt(sys.argv[1:],"p:d:a:o:h")
     except getopt.GetoptError:
         sys.exit(2)
 
@@ -197,6 +197,9 @@ if __name__ == '__main__':
             config['app'] = arg
         elif opt == '-o':
             RESULT_FILE = arg
+        elif opt == '-h':
+            print('''usage: autotest [-d deviceID][-p AppiumServerAddress][-a Application][-o OutputResultFile]\n''')
+            sys.exit(0)
 
     devices = start_devices(device_list)
     if not devices:
