@@ -5,9 +5,11 @@ import android.view.View;
 import android.webkit.WebView;
 
 import com.ciscospark.androidsdk.CompletionHandler;
+import com.ciscospark.androidsdk.Result;
 import com.ciscospark.androidsdk.Spark;
 import com.ciscospark.androidsdk.auth.JWTAuthenticator;
 import com.ciscospark.androidsdk.auth.OAuthAuthenticator;
+import com.ciscospark.androidsdk.auth.OAuthTestUserAuthenticator;
 import com.ciscospark.androidsdk.auth.OAuthWebViewAuthenticator;
 import com.ciscospark.androidsdk.message.MessageClient;
 import com.ciscospark.androidsdk.phone.Call;
@@ -37,6 +39,24 @@ public class TestActor {
     public static final String REDIRECT_URL = "KitchenSink://response";
     public static final String SCOPE = "spark:all";
     public static final String TOKEN = "MTkyOTc2OTQtMGUwOC00Y2NlLWE2YmYtMDcxY2FlMDFkMTFlMmMyNWQzMjAtOTJk";
+
+    /*roomid of the room contains sparkid1 and sparkid2 and sparkid3*/
+    public static final String SPARK_ROOM_CALL_ROOM_ID = "Y2lzY29zcGFyazovL3VzL1JPT00vZTRlOTk4ZDAtZTU1My0xMWU3LWE2M2QtZTFjYmVjZjExMGJj";
+
+    /*roomid of the room contains sparkid1 and sparkid2 */
+    public static final String SPARK_ROOM_CALL_ROOM_ID2 = "Y2lzY29zcGFyazovL3VzL1JPT00vMzViNTMyYjAtZTZjNi0xMWU3LWIyYzctMGJkNDA4MWU4MjNl";
+
+
+    public static String sparkUser1 = "sparksdktestuser18@tropo.com";
+    public static String sparkUser2 = "sparksdktestuser19@tropo.com";
+    public static String sparkUser3 = "sparksdktestuser20@tropo.com";
+    public static String sparkUserID1 = "5992bb3d-55c0-4a1b-945f-213fc191076f";
+    public static String sparkUserID2 = "e717cd96-d671-4794-80b5-5a92646e7a7b";
+    public static String sparkUserID3 = "be1c4a46-f08c-47ec-868f-06a71e6f1f0f";
+
+    public static String SPARK_USER_PASSWORD = "Test(123)";
+
+
     TestActivity activity;
     AppTestRunner runner;
 
@@ -51,6 +71,7 @@ public class TestActor {
     CallProcessor connectedProcessor;
     EventProcessor disconnectedProcessor;
     EventProcessor mediaChangedProcessor;
+    EventProcessor callMembershipProcessor;
 
     public TestActor(TestActivity activity, AppTestRunner runner, String jwt) {
         this.activity = activity;
@@ -58,13 +79,17 @@ public class TestActor {
         jwtKey = jwt;
     }
 
-    public TestActor(String email, String password) {
-        this.email = email;
-        this.password = password;
+    public TestActor(TestActivity activity, AppTestRunner runner) {
+        this.activity = activity;
+        this.runner = runner;
     }
 
     public static TestActor JwtUser(TestActivity activity, AppTestRunner runner, String jwt) {
         return new TestActor(activity, runner, jwt);
+    }
+
+    public static TestActor SparkUser(TestActivity activity, AppTestRunner runner) {
+        return new TestActor(activity, runner);
     }
 
     public void login(CompletionHandler<Void> handler) {
@@ -114,6 +139,34 @@ public class TestActor {
                 runner.resume();
             }
             webView.setVisibility(View.INVISIBLE);
+        });
+
+        Ln.e("Waite for register");
+        runner.await();
+    }
+
+    public void loginBySparkId(String username,String password,CompletionHandler<Void> handler) {
+        OAuthTestUserAuthenticator auth = new OAuthTestUserAuthenticator(CLIENT_ID, CLIENT_SEC, SCOPE,REDIRECT_URL,username,username,password);
+        spark = new Spark(activity.getApplication(), auth);
+        auth.authorize(result -> {
+            if (result.isSuccessful()){
+                Ln.d("loginBySparkId isSuccessful!");
+                phone = spark.phone();
+                phone.register(r -> {
+                    if (r.isSuccessful()) {
+                        // Device registered
+                        Ln.e("register success");
+                        handler.onComplete(r);
+                    } else {
+                        // Device not registered, and calls will not be sent or received
+                        Ln.e("register failed");
+                        runner.resume();
+                    }
+                });
+            }else{
+                handler.onComplete(result);
+                runner.resume();
+            }
         });
 
         Ln.e("Waite for register");
@@ -177,6 +230,10 @@ public class TestActor {
         mediaChangedProcessor = processor;
     }
 
+    public void onCallMembershipChanged(EventProcessor processor) {
+        callMembershipProcessor = processor;
+    }
+
     public CallObserver defaultObserver = new CallObserver() {
         @Override
         public void onRinging(Call call) {
@@ -200,6 +257,12 @@ public class TestActor {
         public void onMediaChanged(MediaChangedEvent event) {
             Ln.e("Call media changed");
             if (mediaChangedProcessor != null) mediaChangedProcessor.process(event);
+        }
+
+        @Override
+        public void onCallMembershipChanged(CallMembershipChangedEvent event) {
+            Ln.e("Call membership changed");
+            if (callMembershipProcessor != null) callMembershipProcessor.process(event);
         }
     };
 }

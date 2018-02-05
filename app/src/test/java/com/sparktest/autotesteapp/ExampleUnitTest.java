@@ -49,17 +49,17 @@ public class ExampleUnitTest {
         System.out.println("====== Before 2 ======");
     }
 
-    @Test
-    public void test1() throws Exception {
-        System.out.println("====== Test 1 ======");
-        assertEquals(4, 2 + 2);
-    }
-
-    @Test
-    public void test2() throws Exception {
-        System.out.println("====== Test 2 ======");
-        assertEquals(5, 2 + 2);
-    }
+//    @Test
+//    public void test1() throws Exception {
+//        System.out.println("====== Test 1 ======");
+//        assertEquals(4, 2 + 2);
+//    }
+//
+//    @Test
+//    public void test2() throws Exception {
+//        System.out.println("====== Test 2 ======");
+//        assertEquals(5, 2 + 2);
+//    }
 
     @After
     public void after1() {

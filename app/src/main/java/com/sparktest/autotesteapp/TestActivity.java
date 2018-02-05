@@ -34,6 +34,7 @@ import com.sparktest.autotesteapp.cases.TestCaseMuteAudioVideo;
 import com.sparktest.autotesteapp.cases.TestCaseRoom;
 import com.sparktest.autotesteapp.cases.TestCaseTeamAndMemberShip;
 import com.sparktest.autotesteapp.cases.TestCaseWebhooks;
+import com.sparktest.autotesteapp.cases.roomCallCases.*;
 import com.sparktest.autotesteapp.framework.Test;
 import com.sparktest.autotesteapp.framework.TestCase;
 import com.sparktest.autotesteapp.framework.TestRunner;
@@ -97,7 +98,29 @@ public class TestActivity extends Activity {
         mSuites.add(new TestCaseCallSequence_1());
         mSuites.add(new TestCaseCallSequence_2());
         mSuites.add(new TestCaseKeepCall());
-
+        mSuites.add(new TestCaseSpaceCall1());
+        mSuites.add(new TestCaseSpaceCall2());
+//        mSuites.add(new TestCaseSpaceCall3());
+//        mSuites.add(new TestCaseSpaceCall4());
+//        mSuites.add(new TestCaseSpaceCall5());
+//        mSuites.add(new TestCaseSpaceCall6());
+//        mSuites.add(new TestCaseSpaceCall7());
+//        mSuites.add(new TestCaseSpaceCall8());
+//        mSuites.add(new TestCaseSpaceCall9());
+//        mSuites.add(new TestCaseSpaceCall10());
+//        mSuites.add(new TestCaseSpaceCall11());
+//        mSuites.add(new TestCaseSpaceCall12());
+//        mSuites.add(new TestCaseSpaceCall13());
+//        mSuites.add(new TestCaseSpaceCall14());
+//        mSuites.add(new TestCaseSpaceCall15());
+//        mSuites.add(new TestCaseSpaceCall16());
+//        mSuites.add(new TestCaseSpaceCall17());
+//        mSuites.add(new TestCaseSpaceCall18());
+//        mSuites.add(new TestCaseSpaceCall19());
+//        mSuites.add(new TestCaseSpaceCall20());
+//        mSuites.add(new TestCaseSpaceCall21());
+//        mSuites.add(new TestCaseSpaceCall22());
+//        mSuites.add(new TestCaseSpaceCall23());
         TestCaseAdapter adapter = new TestCaseAdapter(this, mSuites);
         mListView.setAdapter(adapter);
     }

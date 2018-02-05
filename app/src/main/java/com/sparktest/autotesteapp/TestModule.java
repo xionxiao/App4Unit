@@ -22,6 +22,7 @@ import com.sparktest.autotesteapp.cases.TestCaseRoom;
 import com.sparktest.autotesteapp.cases.TestCaseTeamAndMemberShip;
 import com.sparktest.autotesteapp.cases.TestCaseWebhooks;
 import com.sparktest.autotesteapp.cases.TestTest;
+import com.sparktest.autotesteapp.cases.roomCallCases.*;
 import com.sparktest.autotesteapp.framework.TestRunner;
 import com.sparktest.autotesteapp.utils.TestActor;
 
@@ -70,6 +71,90 @@ import dagger.Provides;
                 TestCaseCallSequence_2.Caller.class,
                 TestCaseKeepCall.Callee.class,
                 TestCaseKeepCall.Caller.class,
+                //room call
+                TestCaseSpaceCall1.TestActorCall1Person1.class,
+                TestCaseSpaceCall1.TestActorCall1Person2.class,
+                TestCaseSpaceCall1.TestActorCall1Person3.class,
+
+                TestCaseSpaceCall2.TestActorCall2Person1.class,
+                TestCaseSpaceCall2.TestActorCall2Person2.class,
+                TestCaseSpaceCall2.TestActorCall2Person3.class,
+
+                TestCaseSpaceCall3.TestActorCall3Person1.class,
+                TestCaseSpaceCall3.TestActorCall3Person2.class,
+                TestCaseSpaceCall3.TestActorCall3Person3.class,
+
+                TestCaseSpaceCall4.TestActorCall4Person1.class,
+                TestCaseSpaceCall4.TestActorCall4Person2.class,
+                TestCaseSpaceCall4.TestActorCall4Person3.class,
+
+                TestCaseSpaceCall5.TestActorCall5Person1.class,
+                TestCaseSpaceCall5.TestActorCall5Person2.class,
+                TestCaseSpaceCall5.TestActorCall5Person3.class,
+
+                TestCaseSpaceCall6.TestActorCall6Person1.class,
+                TestCaseSpaceCall6.TestActorCall6Person2.class,
+                TestCaseSpaceCall6.TestActorCall6Person3.class,
+
+                TestCaseSpaceCall7.TestActorCall7Person1.class,
+                TestCaseSpaceCall7.TestActorCall7Person2.class,
+                TestCaseSpaceCall7.TestActorCall7Person3.class,
+
+                TestCaseSpaceCall8.TestActorCall8Person1.class,
+                TestCaseSpaceCall8.TestActorCall8Person2.class,
+                TestCaseSpaceCall8.TestActorCall8Person3.class,
+
+                TestCaseSpaceCall9.TestActorCall9Person1.class,
+                TestCaseSpaceCall9.TestActorCall9Person2.class,
+                TestCaseSpaceCall9.TestActorCall9Person3.class,
+
+                TestCaseSpaceCall10.TestActorCall10Person1.class,
+                TestCaseSpaceCall10.TestActorCall10Person2.class,
+
+                TestCaseSpaceCall11.TestActorCall11Person1.class,
+                TestCaseSpaceCall11.TestActorCall11Person2Device1.class,
+                TestCaseSpaceCall11.TestActorCall11Person2Device2.class,
+
+                TestCaseSpaceCall12.TestActorCall12Device1.class,
+                TestCaseSpaceCall12.TestActorCall12Device2.class,
+
+                TestCaseSpaceCall13.TestActorCall13Person2.class,
+                TestCaseSpaceCall13.TestActorCall13Person1Device1.class,
+                TestCaseSpaceCall13.TestActorCall13Person1Device2.class,
+
+                TestCaseSpaceCall14.TestActorCall14Person2.class,
+                TestCaseSpaceCall14.TestActorCall14Person1Device1.class,
+                TestCaseSpaceCall14.TestActorCall14Person1Device2.class,
+
+                TestCaseSpaceCall15.TestActorCall15Person1.class,
+                TestCaseSpaceCall15.TestActorCall15Person2.class,
+
+                TestCaseSpaceCall16.TestActorCall16Person1.class,
+                TestCaseSpaceCall16.TestActorCall16Person2.class,
+
+                TestCaseSpaceCall17.TestActorCall17Person1.class,
+                TestCaseSpaceCall17.TestActorCall17Person2.class,
+                TestCaseSpaceCall17.TestActorCall17Person3.class,
+
+                TestCaseSpaceCall18.TestActorCall18Person1.class,
+                TestCaseSpaceCall18.TestActorCall18Person2.class,
+                TestCaseSpaceCall18.TestActorCall18Person3.class,
+
+                TestCaseSpaceCall19.TestActorCall19Person1.class,
+                TestCaseSpaceCall19.TestActorCall19Person2.class,
+                TestCaseSpaceCall19.TestActorCall19Person3.class,
+
+                TestCaseSpaceCall20.TestActorCall20Person1.class,
+
+                TestCaseSpaceCall21.TestActorCall21Person1.class,
+                TestCaseSpaceCall21.TestActorCall21Person2.class,
+
+                TestCaseSpaceCall22.TestActorCall22Person1.class,
+                TestCaseSpaceCall22.TestActorCall22Person2.class,
+
+                TestCaseSpaceCall23.TestActorCall23Person1.class,
+                TestCaseSpaceCall23.TestActorCall23Person2.class,
+                TestCaseSpaceCall23.TestActorCall23Person3.class,
         }
 )
 public class TestModule {
