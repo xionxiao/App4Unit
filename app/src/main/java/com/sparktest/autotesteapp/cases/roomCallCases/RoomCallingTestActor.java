@@ -55,7 +55,7 @@ public class RoomCallingTestActor {
      * resume after call disconnected
      */
     protected void onCallSetup(Result<Call> result) {
-        Ln.d("Caller onCallSetup result: " + result.isSuccessful());
+        Ln.d("Caller onCallSetup result: %b" , result.isSuccessful());
         if (result.isSuccessful()) {
             actor.onConnected(this::onConnected);
             actor.onMediaChanged(this::onMediaChanged);
@@ -74,11 +74,11 @@ public class RoomCallingTestActor {
     }
 
     protected void onMediaChanged(CallObserver.CallEvent event){
-        Ln.d("Caller onMediaChanged: " + event);
+        Ln.d("Caller onMediaChanged: " + event.toString());
     }
 
     protected void onCallMembershipChanged(CallObserver.CallEvent event){
-        Ln.d("Caller onCallMembershipChanged: " + event);
+        Ln.d("Caller onCallMembershipChanged: " + event.toString());
         if (event instanceof CallObserver.MembershipJoinedEvent) {
             if (((CallObserver.MembershipJoinedEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID1)) {
                 Ln.d("onCallMembershipChanged: person1 Joined");
@@ -94,13 +94,13 @@ public class RoomCallingTestActor {
     }
 
     protected void onDisconnected(CallObserver.CallEvent event) {
-        Ln.d("Caller onDisconnected: " + event);
+        Ln.d("Caller onDisconnected: " + event.toString());
         Verify.verifyTrue(event instanceof CallObserver.LocalLeft);
         Verify.verifyTrue(event.getCall().getStatus() == Call.CallStatus.DISCONNECTED);
     }
 
     protected void checkMemberships(Call call) {
-        Ln.d("Caller checkMemberships: caller -> "+call.getFrom());
+        Ln.d("Caller checkMemberships: caller -> "+call.getFrom().getEmail());
         for(CallMembership membership:call.getMemberships()) {
             if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID1) && membership.getState() == CallMembership.State.JOINED) {
                 Ln.d("checkMemberships: person1 Joined");

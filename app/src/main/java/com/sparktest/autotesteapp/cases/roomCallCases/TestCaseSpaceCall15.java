@@ -47,7 +47,7 @@ public class TestCaseSpaceCall15 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: " + result.isSuccessful());
+            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID2, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -119,7 +119,7 @@ public class TestCaseSpaceCall15 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: " + result.isSuccessful());
+            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.sparkUser1,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);

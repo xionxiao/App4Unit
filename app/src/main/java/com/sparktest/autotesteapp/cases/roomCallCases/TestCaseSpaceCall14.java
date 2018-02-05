@@ -47,7 +47,7 @@ public class TestCaseSpaceCall14 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: " + result.isSuccessful());
+            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -103,7 +103,7 @@ public class TestCaseSpaceCall14 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: " + result.isSuccessful());
+            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
             actor.getPhone().setIncomingCallListener(call -> {
                 Ln.e("Incoming call");
                 actor.onConnected(this::onConnected);
@@ -179,7 +179,7 @@ public class TestCaseSpaceCall14 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: " + result.isSuccessful());
+            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
             actor.getPhone().setIncomingCallListener(call -> {
                 Ln.e("Incoming call");
                 actor.onConnected(this::onConnected);

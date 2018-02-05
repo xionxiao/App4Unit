@@ -53,7 +53,7 @@ public class TestCaseSpaceCall18 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: " + result.isSuccessful());
+            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID2, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -94,7 +94,7 @@ public class TestCaseSpaceCall18 extends TestSuite {
             actor.getSpark().memberships().create(actor.SPARK_ROOM_CALL_ROOM_ID2, actor.sparkUserID3, null, false, new CompletionHandler<Membership>() {
                 @Override
                 public void onComplete(Result<Membership> result) {
-                    Ln.d("onTeamMemberShipCreated: " + result.isSuccessful());
+                    Ln.d("onTeamMemberShipCreated: %b" , result.isSuccessful());
                     if (result.isSuccessful()) {
                         if (result.getData().getPersonId().equalsIgnoreCase(actor.sparkUserID3)) {
                             personThreeMembershipID = result.getData().getId();
@@ -153,7 +153,7 @@ public class TestCaseSpaceCall18 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: " + result.isSuccessful());
+            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.sparkUser3, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -191,7 +191,7 @@ public class TestCaseSpaceCall18 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: " + result.isSuccessful());
+            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
             actor.getPhone().setIncomingCallListener(call -> {
                 Ln.e("Incoming call");
                 actor.onConnected(this::onConnected);

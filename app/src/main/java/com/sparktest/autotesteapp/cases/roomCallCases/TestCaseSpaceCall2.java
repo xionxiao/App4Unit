@@ -53,7 +53,7 @@ public class TestCaseSpaceCall2 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: " + result.isSuccessful());
+            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -81,6 +81,13 @@ public class TestCaseSpaceCall2 extends TestSuite {
             if(this.leftOnce) {
                 actor.logout();
             }
+            else {
+                this.leftOnce = true;
+                mHandler.postDelayed(() -> {
+                    actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
+                            this::onCallSetup);
+                }, 5000);
+            }
         }
 
         @Override
@@ -103,13 +110,7 @@ public class TestCaseSpaceCall2 extends TestSuite {
             call.hangup(result -> {
                 Ln.d("call hangup");
                 Verify.verifyTrue(result.isSuccessful());
-                if(!this.leftOnce) {
-                    this.leftOnce = true;
-                    mHandler.postDelayed(() -> {
-                        actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
-                                this::onCallSetup);
-                    }, 5000);
-                }
+
             });
         }
     }
@@ -132,7 +133,7 @@ public class TestCaseSpaceCall2 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: " + result.isSuccessful());
+            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -190,7 +191,7 @@ public class TestCaseSpaceCall2 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: " + result.isSuccessful());
+            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -207,7 +208,7 @@ public class TestCaseSpaceCall2 extends TestSuite {
                     && this.person1LeftOnce) {
                 hangupCall(event.getCall());
             } else if (event instanceof CallObserver.MembershipLeftEvent) {
-                if (((CallObserver.MembershipJoinedEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID1)
+                if (((CallObserver.MembershipLeftEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID1)
                         && !this.person1LeftOnce) {
                     Ln.d("Call: Person1 first Left Detected");
                     this.person1LeftOnce = true;
