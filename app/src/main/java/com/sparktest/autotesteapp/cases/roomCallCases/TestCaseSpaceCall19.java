@@ -98,7 +98,7 @@ public class TestCaseSpaceCall19 extends TestSuite {
                 public void onComplete(Result<Membership> result) {
                     Ln.d("onTeamMemberShipCreated: %b" , result.isSuccessful());
                     if (result.isSuccessful()) {
-                        if (result.getData().getPersonId().equalsIgnoreCase(actor.sparkUserID3)) {
+                        if (result.getData().getPersonEmail().equalsIgnoreCase(actor.sparkUser3)) {
                             personThreeMembershipID = result.getData().getId();
                             personThreeInvited = true;
                         }
@@ -123,6 +123,7 @@ public class TestCaseSpaceCall19 extends TestSuite {
             actor.getSpark().memberships().delete(personThreeMembershipID, new CompletionHandler<Void>() {
                 @Override
                 public void onComplete(Result<Void> result) {
+                    Ln.d("removePersonThreeFromRoom onComplete: " + result.isSuccessful());
                     if (result.isSuccessful()) {
                         mHandler.postDelayed(()->{
                             hangupCall(call);
@@ -166,12 +167,14 @@ public class TestCaseSpaceCall19 extends TestSuite {
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
             if(event instanceof CallObserver.RemoteDecline) {
-                actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID2, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
-                        this::onCallSetup);
+                mHandler.postDelayed(()->{
+                    actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID2, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
+                            this::onCallSetup);
+                },5000);
             } else {
-               actor.logout();
+                super.onDisconnected(event);
+                actor.logout();
             }
         }
 
@@ -247,12 +250,14 @@ public class TestCaseSpaceCall19 extends TestSuite {
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
             if(event instanceof CallObserver.LocalLeft) {
+                super.onDisconnected(event);
                 actor.logout();
             } else if(event instanceof CallObserver.LocalDecline) {
-                actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID2, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
-                        this::onCallSetup);
+                mHandler.postDelayed(()->{
+                    actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID2, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
+                            this::onCallSetup);
+                },5000);
             }
         }
     }
