@@ -99,7 +99,7 @@ public class TestActivity extends Activity {
 //        mSuites.add(new TestCaseCallSequence_2());
 //        mSuites.add(new TestCaseKeepCall());
 //        mSuites.add(new TestCaseSpaceCall1());
-        mSuites.add(new TestCaseSpaceCall2());
+//        mSuites.add(new TestCaseSpaceCall2());
 //        mSuites.add(new TestCaseSpaceCall3());
 //        mSuites.add(new TestCaseSpaceCall4());
 //        mSuites.add(new TestCaseSpaceCall5());
@@ -107,9 +107,9 @@ public class TestActivity extends Activity {
 //        mSuites.add(new TestCaseSpaceCall7());
 //        mSuites.add(new TestCaseSpaceCall8());
 //        mSuites.add(new TestCaseSpaceCall9());
-//        mSuites.add(new TestCaseSpaceCall10());
-//        mSuites.add(new TestCaseSpaceCall11());
-//        mSuites.add(new TestCaseSpaceCall12());
+        mSuites.add(new TestCaseSpaceCall10());
+        mSuites.add(new TestCaseSpaceCall11());
+        mSuites.add(new TestCaseSpaceCall12());
 //        mSuites.add(new TestCaseSpaceCall13());
 //        mSuites.add(new TestCaseSpaceCall14());
 //        mSuites.add(new TestCaseSpaceCall15());

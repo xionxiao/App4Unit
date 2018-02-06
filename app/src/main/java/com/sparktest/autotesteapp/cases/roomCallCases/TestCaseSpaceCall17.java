@@ -97,7 +97,7 @@ public class TestCaseSpaceCall17 extends TestSuite {
                 public void onComplete(Result<Membership> result) {
                     Ln.d("onTeamMemberShipCreated: %b" , result.isSuccessful());
                     if (result.isSuccessful()) {
-                        if (result.getData().getPersonId().equalsIgnoreCase(actor.sparkUserID3)) {
+                        if (result.getData().getPersonEmail().equalsIgnoreCase(actor.sparkUser3)) {
                             personThreeMembershipID = result.getData().getId();
                             personThreeInvited = true;
                         }

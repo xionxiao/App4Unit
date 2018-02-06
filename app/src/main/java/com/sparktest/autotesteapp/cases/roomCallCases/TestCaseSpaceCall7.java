@@ -57,7 +57,7 @@ public class TestCaseSpaceCall7 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID2, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -74,7 +74,7 @@ public class TestCaseSpaceCall7 extends TestSuite {
             }
             if (event instanceof CallObserver.MembershipLeftEvent
                     && ((CallObserver.MembershipLeftEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID3)){
-                remotePersonThreeFromRoom(event.getCall());
+                hangupCall(event.getCall());
             }
         }
 
@@ -100,9 +100,9 @@ public class TestCaseSpaceCall7 extends TestSuite {
             actor.getSpark().memberships().create(actor.SPARK_ROOM_CALL_ROOM_ID2, actor.sparkUserID3, null, false, new CompletionHandler<Membership>() {
                 @Override
                 public void onComplete(Result<Membership> result) {
-                    Ln.d("onTeamMemberShipCreated: %b" , result.isSuccessful());
+                    Ln.w("onTeamMemberShipCreated: %b" , result.isSuccessful());
                     if (result.isSuccessful()) {
-                        if (result.getData().getPersonId().equalsIgnoreCase(actor.sparkUserID3)) {
+                        if (result.getData().getPersonEmail().equalsIgnoreCase(actor.sparkUser3)) {
                             personThreeMembershipID = result.getData().getId();
                             personThreeInvited = true;
                         }
@@ -114,7 +114,21 @@ public class TestCaseSpaceCall7 extends TestSuite {
             });
         }
 
-        protected void remotePersonThreeFromRoom(Call call) {
+        @Override
+        protected void hangupCall(Call call) {
+            Ln.w("hangupCall in");
+            if (call.getStatus() == Call.CallStatus.CONNECTED) {
+                Ln.w("hangupCall hang up connected call!");
+                call.hangup(result -> {
+                    Ln.w("call hangup finish");
+                    Verify.verifyTrue(result.isSuccessful());
+                    removePersonThreeFromRoom(call);
+                });
+            }
+            Ln.w("hangupCall out");
+        }
+
+        protected void removePersonThreeFromRoom(Call call) {
             if (!personThreeInvited || Checker.isEmpty(personThreeMembershipID)) {
                 Verify.verifyTrue(false);
                 hangupCall(call);
@@ -124,10 +138,10 @@ public class TestCaseSpaceCall7 extends TestSuite {
                 @Override
                 public void onComplete(Result<Void> result) {
                     if (result.isSuccessful()) {
-                        hangupCall(call);
+
                     }
                     else {
-                        remotePersonThreeFromRoom(call);
+                        removePersonThreeFromRoom(call);
                     }
 
                 }

@@ -49,7 +49,7 @@ public class TestCaseSpaceCall3 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -66,7 +66,7 @@ public class TestCaseSpaceCall3 extends TestSuite {
                 if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID2)
                         && this.person2Joined && this.person3Joined
                         && membership.isSendingVideo() == true) {
-                    Ln.d("Call: Person2 Unmuted Detected");
+                    Ln.w("Call: Person2 Unmuted Detected");
                     hangupCall(event.getCall());
                 }
             }
@@ -98,7 +98,7 @@ public class TestCaseSpaceCall3 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -115,15 +115,21 @@ public class TestCaseSpaceCall3 extends TestSuite {
                 if(membership.getPersonId().equalsIgnoreCase(actor.sparkUserID3)
                         && membership.isSendingVideo() == false
                         && this.person1Joined && this.person3Joined){
-                    event.getCall().setSendingVideo(true);
+                    mHandler.postDelayed(()-> {
+                        Ln.w("Call: Person2 start sending video");
+                        event.getCall().setSendingVideo(true);
+                    },5000);
                 }
             } else if (event instanceof CallObserver.MembershipJoinedEvent
                     && this.person1Joined && this.person3Joined) {
-                event.getCall().setSendingVideo(false);
+                mHandler.postDelayed(()-> {
+                    Ln.w("Call: Person2 stop sending video");
+                    event.getCall().setSendingVideo(false);
+                },5000);
             } else if (event instanceof CallObserver.MembershipLeftEvent
                     && ((CallObserver.MembershipLeftEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID1)) {
                 if (this.person1Joined && this.person3Joined ) {
-                    Ln.d("Call: Person2 Start Leaving");
+                    Ln.w("Call: Person2 Start Leaving");
                     hangupCall(event.getCall());
                 }
             }
@@ -139,13 +145,16 @@ public class TestCaseSpaceCall3 extends TestSuite {
         protected void checkMemberships(Call call) {
             super.checkMemberships(call);
             if (this.person1Joined && this.person3Joined) {
-                call.setSendingVideo(false);
+                mHandler.postDelayed(()-> {
+                    Ln.w("Call: Person2 stop sending video");
+                    call.setSendingVideo(false);
+                },5000);
             }
             for(CallMembership membership : call.getMemberships()) {
                 if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID1)
                         && this.person1Joined && this.person3Joined
                         && membership.getState() == CallMembership.State.LEFT) {
-                    Ln.d("Call: Person2 hangup");
+                    Ln.w("Call: Person2 hangup");
                     hangupCall(call);
                 }
             }
@@ -186,13 +195,14 @@ public class TestCaseSpaceCall3 extends TestSuite {
                 CallMembership membership = ((CallObserver.MembershipSendingVideoEvent) event).getCallMembership();
                 if(membership.getPersonId().equalsIgnoreCase(actor.sparkUserID2)
                         && membership.isSendingVideo() == false) {
+                    Ln.w("Call: Person3 stop sending video");
                     event.getCall().setSendingVideo(false);
                 }
             }
             if (event instanceof CallObserver.MembershipLeftEvent) {
                 if (((CallObserver.MembershipLeftEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID2)
                         && this.person1Joined && this.person2Joined ) {
-                    Ln.d("Call: Person2 Left Detected");
+                    Ln.w("Call: Person2 Left Detected");
                     hangupCall(event.getCall());
                 }
             }
@@ -210,9 +220,11 @@ public class TestCaseSpaceCall3 extends TestSuite {
             for(CallMembership membership:call.getMemberships()) {
                 if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID2)) {
                     if (membership.getState() == CallMembership.State.LEFT) {
+                        Ln.w("Call: Person3 hangup");
                         hangupCall(call);
                     }
                     else if(membership.isSendingVideo() == false && this.person1Joined && this.person2Joined){
+                        Ln.w("Call: Person3 stop sending video");
                         call.setSendingVideo(false);
                     }
                 }

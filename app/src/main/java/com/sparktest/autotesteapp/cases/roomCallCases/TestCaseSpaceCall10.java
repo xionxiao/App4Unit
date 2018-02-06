@@ -51,27 +51,27 @@ public class TestCaseSpaceCall10 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID2, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
 
                 actor.getPhone().setIncomingCallListener(call -> {
-                    Ln.e("Incoming call");
+                    Ln.w("Incoming call");
                     actor.setDefaultCallObserver(call);
 
                     call.answer(MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface), new CompletionHandler<Void>() {
                         @Override
                         public void onComplete(Result<Void> result) {
                             if (result.isSuccessful()) {
-                                Ln.d("Call:Except Answer call fail but success");
+                                Ln.w("Call:Except Answer call fail but success");
                                 Verify.verifyTrue(false);
                                 if(roomCall != null) {
                                     hangupCall(roomCall);
                                 }
                             }
                             else {
-                                Ln.d("Call: Answer call failed as except");
+                                Ln.w("Call: Answer call failed as except");
                                 Verify.verifyTrue(true);
                                 if(roomCall != null) {
                                     hangupCall(roomCall);
@@ -103,7 +103,7 @@ public class TestCaseSpaceCall10 extends TestSuite {
         @Override
         protected void hangupCall(Call call) {
             call.hangup(result -> {
-                Ln.d("call hangup");
+                Ln.w("call hangup");
                 Verify.verifyTrue(result.isSuccessful());
                 actor.logout();
             });
@@ -113,7 +113,7 @@ public class TestCaseSpaceCall10 extends TestSuite {
         protected void onConnected(Call call) {
             super.onConnected(call);
             if(roomCallComplated) {
-                Ln.d("Call: received onConnected second time");
+                Ln.w("Call: received onConnected second time");
                 Verify.verifyTrue(false);
             } else {
                 roomCallComplated = true;
@@ -138,10 +138,13 @@ public class TestCaseSpaceCall10 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
-                actor.getPhone().dial(actor.sparkUser1,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
-                        this::onCallSetup);
+                mHandler.postDelayed(()->{
+                    actor.getPhone().dial(actor.sparkUser1,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
+                            this::onCallSetup);
+                },10000);
+
             } else {
                 Verify.verifyTrue(false);
             }
@@ -152,14 +155,17 @@ public class TestCaseSpaceCall10 extends TestSuite {
             super.onCallSetup(result);
             if (result.isSuccessful()) {
                 mHandler.postDelayed(()->{
-                    hangupCall(result.getData());
+                    result.getData().hangup(r -> {
+                        Ln.w("call hangup finish");
+                        Verify.verifyTrue(r.isSuccessful());
+                    });
                 },15000);
             }
         }
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
+            Verify.verifyTrue(event instanceof CallObserver.LocalCancel);
             actor.logout();
         }
 

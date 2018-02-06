@@ -57,7 +57,7 @@ public class TestCaseSpaceCall8 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID2, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -97,9 +97,9 @@ public class TestCaseSpaceCall8 extends TestSuite {
             actor.getSpark().memberships().create(actor.SPARK_ROOM_CALL_ROOM_ID2, actor.sparkUserID3, null, false, new CompletionHandler<Membership>() {
                 @Override
                 public void onComplete(Result<Membership> result) {
-                    Ln.d("onTeamMemberShipCreated: %b" , result.isSuccessful());
+                    Ln.w("onTeamMemberShipCreated: %b" , result.isSuccessful());
                     if (result.isSuccessful()) {
-                        if (result.getData().getPersonId().equalsIgnoreCase(actor.sparkUserID3)) {
+                        if (result.getData().getPersonEmail().equalsIgnoreCase(actor.sparkUser3)) {
                             personThreeMembershipID = result.getData().getId();
                             personThreeInvited = true;
                             removePersonThreeFromRoom(call);
@@ -137,6 +137,8 @@ public class TestCaseSpaceCall8 extends TestSuite {
 
                     }
 
+
+
                 }
             });
         }
@@ -161,7 +163,7 @@ public class TestCaseSpaceCall8 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID2,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -192,7 +194,7 @@ public class TestCaseSpaceCall8 extends TestSuite {
                 if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID1)
                         && this.person1Joined
                         && membership.getState() == CallMembership.State.LEFT) {
-                    Ln.d("Call: Person2 hangup");
+                    Ln.w("Call: Person2 hangup");
                     hangupCall(call);
                 }
             }
@@ -217,29 +219,31 @@ public class TestCaseSpaceCall8 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             actor.getPhone().setIncomingCallListener(call -> {
-                Ln.e("Incoming call");
+                Ln.w("Incoming call");
                 actor.onConnected(this::onConnected);
                 actor.onMediaChanged(this::onMediaChanged);
                 actor.onCallMembershipChanged(this::onCallMembershipChanged);
                 actor.onDisconnected(this::onDisconnected);
                 actor.setDefaultCallObserver(call);
-
-                call.answer(MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface), new CompletionHandler<Void>() {
-                    @Override
-                    public void onComplete(Result<Void> result) {
-                        if (result.isSuccessful()) {
-                            Ln.d("Call: Incoming call Detected");
-                            Verify.verifyTrue(true);
-                        }
-                        else {
-                            Ln.d("Call: Answer call fail");
-                            Verify.verifyTrue(false);
-                            actor.logout();
-                        }
-                    }
-                });
+                mHandler.postDelayed(()->{
+                    actor.logout();
+                },10000);
+//                call.answer(MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface), new CompletionHandler<Void>() {
+//                    @Override
+//                    public void onComplete(Result<Void> result) {
+//                        if (result.isSuccessful()) {
+//                            Ln.w("Call: Incoming call Detected");
+//                            Verify.verifyTrue(true);
+//                        }
+//                        else {
+//                            Ln.w("Call: Answer call fail");
+//                            Verify.verifyTrue(false);
+//                            actor.logout();
+//                        }
+//                    }
+//                });
             });
         }
 
@@ -249,12 +253,12 @@ public class TestCaseSpaceCall8 extends TestSuite {
             actor.logout();
         }
 
-        @Override
-        protected void onConnected(Call call) {
-            super.onConnected(call);
-            mHandler.postDelayed(()->{
-                hangupCall(call);
-            },5000);
-        }
+//        @Override
+//        protected void onConnected(Call call) {
+//            super.onConnected(call);
+//            mHandler.postDelayed(()->{
+//                hangupCall(call);
+//            },5000);
+//        }
     }
 }

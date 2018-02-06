@@ -54,7 +54,7 @@ public class TestCaseSpaceCall5 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -70,21 +70,21 @@ public class TestCaseSpaceCall5 extends TestSuite {
             mHandler.postDelayed(() -> {
                 if (this.leftOnce) {
                     call.hangup(result -> {
-                        Ln.d("call hangup");
+                        Ln.w("call hangup");
                         Verify.verifyTrue(result.isSuccessful());
                     });
                 }
                 else {
                     hangupCall(call);
                 }
-            }, 10000);
+            }, 5000);
         }
 
         @Override
         protected void onCallMembershipChanged(CallObserver.CallEvent event){
             super.onCallMembershipChanged(event);
             CallObserver.CallMembershipChangedEvent membershipEvent = (CallObserver.CallMembershipChangedEvent)event;
-            Ln.d("=========Received "+membershipEvent.getClass().getName()+" Event:"+membershipEvent.getCallMembership().getEmail());
+            Ln.w("=========Received "+membershipEvent.getClass().getName()+" Event:"+membershipEvent.getCallMembership().getEmail());
         }
 
         @Override
@@ -103,13 +103,13 @@ public class TestCaseSpaceCall5 extends TestSuite {
         @Override
         protected void hangupCall(Call call) {
             call.hangup(result -> {
-                Ln.d("call hangup");
+                Ln.w("call hangup");
                 Verify.verifyTrue(result.isSuccessful());
                 mHandler.postDelayed(() -> {
                     this.leftOnce = true;
                     actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                             this::onCallSetup);
-                }, 30000);
+                }, 10000);
             });
         }
     }
@@ -131,7 +131,7 @@ public class TestCaseSpaceCall5 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -145,14 +145,14 @@ public class TestCaseSpaceCall5 extends TestSuite {
             super.onConnected(call);
             mHandler.postDelayed(() -> {
                 hangupCall(call);
-            }, 5000);
+            }, 30000);
         }
 
         @Override
         protected void onCallMembershipChanged(CallObserver.CallEvent event){
             super.onCallMembershipChanged(event);
             CallObserver.CallMembershipChangedEvent membershipEvent = (CallObserver.CallMembershipChangedEvent)event;
-            Ln.d("=========Received "+membershipEvent.getClass().getName()+" Event:"+membershipEvent.getCallMembership().getEmail());
+            Ln.w("=========Received "+membershipEvent.getClass().getName()+" Event:"+membershipEvent.getCallMembership().getEmail());
         }
 
         @Override
@@ -184,7 +184,7 @@ public class TestCaseSpaceCall5 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -205,7 +205,7 @@ public class TestCaseSpaceCall5 extends TestSuite {
         protected void onCallMembershipChanged(CallObserver.CallEvent event){
             super.onCallMembershipChanged(event);
             CallObserver.CallMembershipChangedEvent membershipEvent = (CallObserver.CallMembershipChangedEvent)event;
-            Ln.d("=========Received "+membershipEvent.getClass().getName()+" Event:"+membershipEvent.getCallMembership().getEmail());
+            Ln.w("=========Received "+membershipEvent.getClass().getName()+" Event:"+membershipEvent.getCallMembership().getEmail());
         }
 
         @Override

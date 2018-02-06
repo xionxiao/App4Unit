@@ -55,76 +55,81 @@ public class RoomCallingTestActor {
      * resume after call disconnected
      */
     protected void onCallSetup(Result<Call> result) {
-        Ln.d("Caller onCallSetup result: %b" , result.isSuccessful());
+        Ln.w("Caller onCallSetup result: %b" , result.isSuccessful());
         if (result.isSuccessful()) {
             actor.onConnected(this::onConnected);
             actor.onMediaChanged(this::onMediaChanged);
             actor.onCallMembershipChanged(this::onCallMembershipChanged);
             actor.onDisconnected(this::onDisconnected);
             actor.setDefaultCallObserver(result.getData());
+            actor.onRinging(this::onRinging);
         } else {
             Verify.verifyTrue(false);
             actor.logout();
         }
     }
 
+    protected void onRinging(Call call) {
+        Ln.w("Caller, onRinging");
+    }
+
     protected void onConnected(Call call){
-        Ln.d("Caller, onConnected");
+        Ln.w("Caller, onConnected");
         checkMemberships(call);
     }
 
     protected void onMediaChanged(CallObserver.CallEvent event){
-        Ln.d("Caller onMediaChanged: " + event.toString());
+        Ln.w("Caller onMediaChanged: " + event.toString());
     }
 
     protected void onCallMembershipChanged(CallObserver.CallEvent event){
-        Ln.d("Caller onCallMembershipChanged: " + event.toString());
+        Ln.w("Caller onCallMembershipChanged: " + event.toString());
         if (event instanceof CallObserver.MembershipJoinedEvent) {
             if (((CallObserver.MembershipJoinedEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID1)) {
-                Ln.d("onCallMembershipChanged: person1 Joined");
+                Ln.w("onCallMembershipChanged: person1 Joined");
                 this.person1Joined = true;
             } else if (((CallObserver.MembershipJoinedEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID2)) {
-                Ln.d("onCallMembershipChanged: person2 Joined");
+                Ln.w("onCallMembershipChanged: person2 Joined");
                 this.person2Joined = true;
             } else if (((CallObserver.MembershipJoinedEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID3)) {
-                Ln.d("onCallMembershipChanged: person3 Joined");
+                Ln.w("onCallMembershipChanged: person3 Joined");
                 this.person3Joined = true;
             }
         }
     }
 
     protected void onDisconnected(CallObserver.CallEvent event) {
-        Ln.d("Caller onDisconnected: " + event.toString());
+        Ln.w("Caller onDisconnected: " + event.toString());
         Verify.verifyTrue(event instanceof CallObserver.LocalLeft);
         Verify.verifyTrue(event.getCall().getStatus() == Call.CallStatus.DISCONNECTED);
     }
 
     protected void checkMemberships(Call call) {
-        Ln.d("Caller checkMemberships: caller -> "+call.getFrom().getEmail());
+        Ln.w("Caller checkMemberships: caller -> "+call.getFrom().getEmail());
         for(CallMembership membership:call.getMemberships()) {
             if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID1) && membership.getState() == CallMembership.State.JOINED) {
-                Ln.d("checkMemberships: person1 Joined");
+                Ln.w("checkMemberships: person1 Joined");
                 this.person1Joined = true;
             } else if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID2) && membership.getState() == CallMembership.State.JOINED) {
-                Ln.d("checkMemberships: person2 Joined");
+                Ln.w("checkMemberships: person2 Joined");
                 this.person2Joined = true;
             } else if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID3) && membership.getState() == CallMembership.State.JOINED) {
-                Ln.d("checkMemberships: person3 Joined");
+                Ln.w("checkMemberships: person3 Joined");
                 this.person3Joined = true;
             }
         }
     }
 
     protected void hangupCall(Call call) {
-        Ln.d("hangupCall in");
+        Ln.w("hangupCall in");
         if (call.getStatus() == Call.CallStatus.CONNECTED) {
-            Ln.d("hangupCall hang up connected call!");
+            Ln.w("hangupCall hang up connected call!");
             call.hangup(result -> {
-                Ln.d("call hangup finish");
+                Ln.w("call hangup finish");
                 Verify.verifyTrue(result.isSuccessful());
             });
         }
-        Ln.d("hangupCall out");
+        Ln.w("hangupCall out");
     }
 
 

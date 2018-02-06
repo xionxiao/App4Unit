@@ -50,7 +50,7 @@ public class TestCaseSpaceCall4 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioOnly(),
                         this::onCallSetup);
@@ -67,7 +67,7 @@ public class TestCaseSpaceCall4 extends TestSuite {
                     || event instanceof CallObserver.ReceivingVideo
                     || event instanceof CallObserver.SendingVideo
                     || event instanceof CallObserver.RemoteVideoViewSizeChanged){
-                Ln.d("Call: audio call received video event");
+                Ln.w("Call: audio call received video event");
                 Verify.verifyTrue(false);
             }
         }
@@ -80,7 +80,7 @@ public class TestCaseSpaceCall4 extends TestSuite {
                 if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID2)
                         && this.person2Joined && this.person3Joined
                         && membership.isSendingAudio() == true) {
-                    Ln.d("Call: Person2 Unmuted Detected");
+                    Ln.w("Call: Person2 Unmuted Detected");
                     hangupCall(event.getCall());
                 }
             }
@@ -112,7 +112,7 @@ public class TestCaseSpaceCall4 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID,MediaOption.audioOnly(),
                         this::onCallSetup);
@@ -129,7 +129,7 @@ public class TestCaseSpaceCall4 extends TestSuite {
                     || event instanceof CallObserver.ReceivingVideo
                     || event instanceof CallObserver.SendingVideo
                     || event instanceof CallObserver.RemoteVideoViewSizeChanged){
-                Ln.d("Call: audio call received video event");
+                Ln.w("Call: audio call received video event");
                 Verify.verifyTrue(false);
             }
         }
@@ -142,15 +142,21 @@ public class TestCaseSpaceCall4 extends TestSuite {
                 if(membership.getPersonId().equalsIgnoreCase(actor.sparkUserID3)
                         && membership.isSendingAudio() == false
                         && this.person1Joined && this.person3Joined){
-                    event.getCall().setSendingAudio(true);
+                    mHandler.postDelayed(()-> {
+                        Ln.w("Call: Person2 start sending audio");
+                        event.getCall().setSendingAudio(true);
+                    },5000);
                 }
             } else if (event instanceof CallObserver.MembershipJoinedEvent
                     && this.person1Joined && this.person3Joined) {
-                event.getCall().setSendingAudio(false);
+                mHandler.postDelayed(()-> {
+                    Ln.w("Call: Person2 stop sending audio");
+                    event.getCall().setSendingAudio(false);
+                },5000);
             } else if (event instanceof CallObserver.MembershipLeftEvent
                     && ((CallObserver.MembershipLeftEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID1)) {
                 if (this.person1Joined && this.person3Joined ) {
-                    Ln.d("Call: Person2 Start Leaving");
+                    Ln.w("Call: Person2 Start Leaving");
                     hangupCall(event.getCall());
                 }
             }
@@ -166,13 +172,16 @@ public class TestCaseSpaceCall4 extends TestSuite {
         protected void checkMemberships(Call call) {
             super.checkMemberships(call);
             if (this.person1Joined && this.person3Joined) {
-                call.setSendingAudio(false);
+                mHandler.postDelayed(()-> {
+                    Ln.w("Call: Person2 stop sending audio");
+                    call.setSendingAudio(false);
+                },5000);
             }
             for(CallMembership membership : call.getMemberships()) {
                 if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID1)
                         && this.person1Joined && this.person3Joined
                         && membership.getState() == CallMembership.State.LEFT) {
-                    Ln.d("Call: Person2 hangup");
+                    Ln.w("Call: Person2 hangup");
                     hangupCall(call);
                 }
             }
@@ -214,7 +223,7 @@ public class TestCaseSpaceCall4 extends TestSuite {
                     || event instanceof CallObserver.ReceivingVideo
                     || event instanceof CallObserver.SendingVideo
                     || event instanceof CallObserver.RemoteVideoViewSizeChanged){
-                Ln.d("Call: audio call received video event");
+                Ln.w("Call: audio call received video event");
                 Verify.verifyTrue(false);
             }
         }
@@ -226,13 +235,14 @@ public class TestCaseSpaceCall4 extends TestSuite {
                 CallMembership membership = ((CallObserver.MembershipSendingAudioEvent) event).getCallMembership();
                 if(membership.getPersonId().equalsIgnoreCase(actor.sparkUserID2)
                         && membership.isSendingAudio() == false) {
+                    Ln.w("Call: Person3 stop sending audio");
                     event.getCall().setSendingAudio(false);
                 }
             }
             if (event instanceof CallObserver.MembershipLeftEvent) {
                 if (((CallObserver.MembershipLeftEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID2)
                         && this.person1Joined && this.person2Joined ) {
-                    Ln.d("Call: Person2 Left Detected");
+                    Ln.w("Call: Person2 Left Detected");
                     hangupCall(event.getCall());
                 }
             }
@@ -250,9 +260,11 @@ public class TestCaseSpaceCall4 extends TestSuite {
             for(CallMembership membership:call.getMemberships()) {
                 if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID2)) {
                     if (membership.getState() == CallMembership.State.LEFT) {
+                        Ln.w("Call: Person2 Left Detected");
                         hangupCall(call);
                     }
                     else if(membership.isSendingAudio() == false && this.person1Joined && this.person2Joined){
+                        Ln.w("Call: Person3 stop sending audio");
                         call.setSendingAudio(false);
                     }
                 }
