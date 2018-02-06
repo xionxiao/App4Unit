@@ -25,6 +25,7 @@ public class TestCaseSpaceCall23 extends TestSuite {
     public TestCaseSpaceCall23() {
         this.add(TestCaseSpaceCall23.TestActorCall23Person1.class);
         this.add(TestCaseSpaceCall23.TestActorCall23Person2.class);
+        this.add(TestCaseSpaceCall23.TestActorCall23Person3.class);
     }
 
     @Description("TestActorCall23Person1")
@@ -101,7 +102,8 @@ public class TestCaseSpaceCall23 extends TestSuite {
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
+            Verify.verifyTrue(event instanceof CallObserver.RemoteLeft);
+            Verify.verifyTrue(event.getCall().getStatus() == Call.CallStatus.DISCONNECTED);
             if(event instanceof CallObserver.RemoteLeft){
                 actor.logout();
             }
@@ -128,8 +130,15 @@ public class TestCaseSpaceCall23 extends TestSuite {
         protected void onRegistered(Result result) {
             Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
-                actor.getPhone().dial(actor.sparkUser2,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
-                        this::onCallSetup);
+                actor.getPhone().setIncomingCallListener(call -> {
+                    Ln.d("Callee IncomingCall");
+                    call.acknowledge(c -> Ln.d("Callee acknowledge call"));
+                    actor.onConnected(this::onConnected);
+                    actor.onDisconnected(this::onDisconnected);
+                    actor.setDefaultCallObserver(call);
+                    call.answer(MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
+                            r -> Ln.e("Callee answering call"));
+                });
             } else {
                 Verify.verifyTrue(false);
             }

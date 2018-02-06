@@ -100,7 +100,12 @@ public class TestCaseSpaceCall22 extends TestSuite {
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
+            if (!personCallMade){
+                Verify.verifyTrue(event instanceof CallObserver.LocalDecline);
+                Verify.verifyTrue(event.getCall().getStatus() == Call.CallStatus.DISCONNECTED);
+            }else {
+                super.onDisconnected(event);
+            }
             if (event instanceof CallObserver.LocalLeft) {
                 Verify.verifyTrue(personCallMade);
                 Verify.verifyTrue(personCallRejected);
@@ -139,7 +144,8 @@ public class TestCaseSpaceCall22 extends TestSuite {
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
+            Verify.verifyTrue(event instanceof CallObserver.RemoteDecline);
+            Verify.verifyTrue(event.getCall().getStatus() == Call.CallStatus.DISCONNECTED);
             if(event instanceof CallObserver.RemoteDecline){
                 actor.logout();
             }

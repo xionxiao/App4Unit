@@ -96,7 +96,7 @@ public class TestCaseSpaceCall18 extends TestSuite {
                 public void onComplete(Result<Membership> result) {
                     Ln.d("onTeamMemberShipCreated: %b" , result.isSuccessful());
                     if (result.isSuccessful()) {
-                        if (result.getData().getPersonId().equalsIgnoreCase(actor.sparkUserID3)) {
+                        if (result.getData().getPersonEmail().equalsIgnoreCase(actor.sparkUser3)) {
                             personThreeMembershipID = result.getData().getId();
                             personThreeInvited = true;
                         }
@@ -164,7 +164,8 @@ public class TestCaseSpaceCall18 extends TestSuite {
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
+            Verify.verifyTrue(event instanceof CallObserver.RemoteDecline);
+            Verify.verifyTrue(event.getCall().getStatus() == Call.CallStatus.DISCONNECTED);
             if(event instanceof CallObserver.RemoteDecline) {
                 actor.logout();
             }
@@ -233,8 +234,8 @@ public class TestCaseSpaceCall18 extends TestSuite {
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
             if(event instanceof CallObserver.LocalLeft) {
+                super.onDisconnected(event);
                 personCall.reject(new CompletionHandler<Void>() {
                     @Override
                     public void onComplete(Result<Void> result) {
