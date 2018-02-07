@@ -165,7 +165,8 @@ public class TestCaseSpaceCall17 extends TestSuite {
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
+            Verify.verifyTrue(event instanceof CallObserver.RemoteLeft);
+            Verify.verifyTrue(event.getCall().getStatus() == Call.CallStatus.DISCONNECTED);
             if(event instanceof CallObserver.RemoteLeft) {
                 actor.logout();
             }

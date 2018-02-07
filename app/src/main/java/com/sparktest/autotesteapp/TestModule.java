@@ -131,6 +131,7 @@ import dagger.Provides;
 
                 TestCaseSpaceCall16.TestActorCall16Person1.class,
                 TestCaseSpaceCall16.TestActorCall16Person2.class,
+                TestCaseSpaceCall16.TestActorCall16Person3.class,
 
                 TestCaseSpaceCall17.TestActorCall17Person1.class,
                 TestCaseSpaceCall17.TestActorCall17Person2.class,
