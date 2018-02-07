@@ -47,10 +47,13 @@ public class TestCaseSpaceCall14 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
-                actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
-                        this::onCallSetup);
+                mHandler.postDelayed(()-> {
+                    actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
+                            this::onCallSetup);
+                },8000);
+
             } else {
                 Verify.verifyTrue(false);
             }
@@ -79,7 +82,7 @@ public class TestCaseSpaceCall14 extends TestSuite {
                     actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                             this::onCallSetup);
                     calledOnce = true;
-                },3000);
+                },10000);
             }
         }
 
@@ -103,9 +106,9 @@ public class TestCaseSpaceCall14 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             actor.getPhone().setIncomingCallListener(call -> {
-                Ln.e("Incoming call");
+                Ln.w("Incoming call");
                 actor.onConnected(this::onConnected);
                 actor.onMediaChanged(this::onMediaChanged);
                 actor.onCallMembershipChanged(this::onCallMembershipChanged);
@@ -115,25 +118,20 @@ public class TestCaseSpaceCall14 extends TestSuite {
                     call.reject(new CompletionHandler<Void>() {
                         @Override
                         public void onComplete(Result<Void> result) {
-                            if (result.isSuccessful()) {
-                                Ln.d("Call: rejected call");
-                                Verify.verifyTrue(true);
-                            } else {
-                                Ln.d("Call: rejected call fail");
-                                Verify.verifyTrue(false);
-                                actor.logout();
-                            }
+                            Ln.w("Call: rejected call result:",result.isSuccessful());
+
                         }
                     });
                 } else {
+                    answerOnce = true;
                     call.answer(MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface), new CompletionHandler<Void>() {
                         @Override
                         public void onComplete(Result<Void> result) {
                             if (result.isSuccessful()) {
-                                Ln.d("Call: Incoming call Detected");
+                                Ln.w("Call: Incoming call Detected");
                                 Verify.verifyTrue(true);
                             } else {
-                                Ln.d("Call: Answer call fail");
+                                Ln.w("Call: Answer call fail");
                                 Verify.verifyTrue(false);
                                 actor.logout();
                             }
@@ -153,8 +151,11 @@ public class TestCaseSpaceCall14 extends TestSuite {
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
-            if(event instanceof CallObserver.LocalDecline) {
+            Ln.w("Caller onDisconnected: " + event.toString());
+            Verify.verifyTrue(event.getCall().getStatus() == Call.CallStatus.DISCONNECTED);
+            if(event instanceof CallObserver.LocalDecline && answerOnce == true) {
+                actor.logout();
+            } else if(event instanceof CallObserver.OtherDeclined && answerOnce == true) {
                 actor.logout();
             }
         }
@@ -179,9 +180,9 @@ public class TestCaseSpaceCall14 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             actor.getPhone().setIncomingCallListener(call -> {
-                Ln.e("Incoming call");
+                Ln.w("Incoming call");
                 actor.onConnected(this::onConnected);
                 actor.onMediaChanged(this::onMediaChanged);
                 actor.onCallMembershipChanged(this::onCallMembershipChanged);
@@ -190,19 +191,22 @@ public class TestCaseSpaceCall14 extends TestSuite {
                 call.reject(new CompletionHandler<Void>() {
                     @Override
                     public void onComplete(Result<Void> result) {
-                        if (result.isSuccessful() && rejectedOnce) {
-                            actor.logout();
-                        }
-                        else if (result.isSuccessful()){
-                            rejectedOnce = true;
-                        }
-                        else {
-                            Verify.verifyTrue(false);
-                            actor.logout();
-                        }
+                        Ln.w("Caller reject: " + result.isSuccessful());
                     }
                 });
             });
+        }
+
+        @Override
+        protected void onDisconnected(CallObserver.CallEvent event) {
+            Ln.w("Caller onDisconnected: " + event.toString());
+            Verify.verifyTrue(event.getCall().getStatus() == Call.CallStatus.DISCONNECTED);
+            if (rejectedOnce) {
+                actor.logout();
+            }
+            else {
+                rejectedOnce = true;
+            }
         }
     }
 

@@ -47,13 +47,13 @@ public class TestCaseSpaceCall15 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID2, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
 
                 actor.getPhone().setIncomingCallListener(call -> {
-                    Ln.e("Incoming call");
+                    Ln.w("Incoming call");
                     actor.setDefaultCallObserver(call);
 
                     call.reject(new CompletionHandler<Void>() {
@@ -86,7 +86,7 @@ public class TestCaseSpaceCall15 extends TestSuite {
         protected void onConnected(Call call) {
             super.onConnected(call);
             if(roomCallComplated) {
-                Ln.d("Call: received onConnected second time");
+                Ln.w("Call: received onConnected second time");
                 Verify.verifyTrue(false);
             } else {
                 roomCallComplated = true;
@@ -95,7 +95,6 @@ public class TestCaseSpaceCall15 extends TestSuite {
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
             if(event instanceof CallObserver.LocalLeft) {
                 actor.logout();
             }
@@ -119,10 +118,12 @@ public class TestCaseSpaceCall15 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
-                actor.getPhone().dial(actor.sparkUser1,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
-                        this::onCallSetup);
+                mHandler.postDelayed(()-> {
+                    actor.getPhone().dial(actor.sparkUser1, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
+                            this::onCallSetup);
+                },5000);
             } else {
                 Verify.verifyTrue(false);
             }
@@ -134,13 +135,12 @@ public class TestCaseSpaceCall15 extends TestSuite {
             if (result.isSuccessful()) {
                 mHandler.postDelayed(()->{
                     hangupCall(result.getData());
-                },25000);
+                },10000);
             }
         }
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
             if(event instanceof CallObserver.RemoteDecline) {
                 actor.logout();
             }

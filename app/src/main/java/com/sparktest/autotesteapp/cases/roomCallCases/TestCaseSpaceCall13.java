@@ -48,7 +48,7 @@ public class TestCaseSpaceCall13 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -104,9 +104,9 @@ public class TestCaseSpaceCall13 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             actor.getPhone().setIncomingCallListener(call -> {
-                Ln.e("Incoming call");
+                Ln.w("Incoming call");
                 actor.onConnected(this::onConnected);
                 actor.onMediaChanged(this::onMediaChanged);
                 actor.onCallMembershipChanged(this::onCallMembershipChanged);
@@ -117,24 +117,25 @@ public class TestCaseSpaceCall13 extends TestSuite {
                         @Override
                         public void onComplete(Result<Void> result) {
                             if (result.isSuccessful()) {
-                                Ln.d("Call: rejected call");
+                                Ln.w("Call: rejected call");
                                 Verify.verifyTrue(true);
                             } else {
-                                Ln.d("Call: rejected call fail");
+                                Ln.w("Call: rejected call fail");
                                 Verify.verifyTrue(false);
                                 actor.logout();
                             }
                         }
                     });
                 } else {
+                    answerOnce = true;
                     call.answer(MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface), new CompletionHandler<Void>() {
                         @Override
                         public void onComplete(Result<Void> result) {
                             if (result.isSuccessful()) {
-                                Ln.d("Call: Incoming call Detected");
+                                Ln.w("Call: Incoming call Detected");
                                 Verify.verifyTrue(true);
                             } else {
-                                Ln.d("Call: Answer call fail");
+                                Ln.w("Call: Answer call fail");
                                 Verify.verifyTrue(false);
                                 actor.logout();
                             }
@@ -154,7 +155,6 @@ public class TestCaseSpaceCall13 extends TestSuite {
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
             if(event instanceof CallObserver.LocalDecline) {
                 actor.logout();
             }
@@ -182,9 +182,9 @@ public class TestCaseSpaceCall13 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             actor.getPhone().setIncomingCallListener(call -> {
-                Ln.e("Incoming call");
+                Ln.w("Incoming call");
                 actor.onConnected(this::onConnected);
                 actor.onMediaChanged(this::onMediaChanged);
                 actor.onCallMembershipChanged(this::onCallMembershipChanged);
@@ -195,7 +195,6 @@ public class TestCaseSpaceCall13 extends TestSuite {
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
             if(event instanceof CallObserver.OtherConnected) {
                 otherConnected = true;
             } else if (event instanceof CallObserver.OtherDeclined) {
