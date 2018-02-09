@@ -3,6 +3,7 @@ package com.sparktest.autotesteapp;
 import android.content.Context;
 
 import com.sparktest.autotesteapp.cases.AnswerCallTest;
+import com.sparktest.autotesteapp.cases.CallAnswerPairTest;
 import com.sparktest.autotesteapp.cases.TestCaseAudioCall;
 import com.sparktest.autotesteapp.cases.TestCaseAudioCallUnmuteVideo;
 import com.sparktest.autotesteapp.cases.TestCaseCallRejectWhenInit;
@@ -71,6 +72,7 @@ import dagger.Provides;
                 TestCaseCallSequence_2.Caller.class,
                 TestCaseKeepCall.Callee.class,
                 TestCaseKeepCall.Caller.class,
+
                 //room call
                 TestCaseSpaceCall1.TestActorCall1Person1.class,
                 TestCaseSpaceCall1.TestActorCall1Person2.class,
