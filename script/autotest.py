@@ -167,13 +167,14 @@ def start_devices(udids):
         c['deviceName'] = d
         c['udid'] = d
         device = Device(remote, c)
+        devices.append(device)
         
-        #que.put(device.start_app())
-        #devices.append(device)
-        #time.sleep(5)
-    threads = [threading.Thread(target=lambda q, d: q.put(d.start_app()), args=(que,device)) for device in devices]
-    [t.start() for t in threads]
-    [t.join() for t in threads]
+        que.put(device.start_app())
+        devices.append(device)
+        time.sleep(3)
+    #threads = [threading.Thread(target=lambda q, d: q.put(d.start_app()), args=(que,device)) for device in devices]
+    #[t.start() for t in threads]
+    #[t.join() for t in threads]
 
     return devices if all(list(que.queue)) else []
 
