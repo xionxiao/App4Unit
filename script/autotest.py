@@ -94,21 +94,21 @@ class Device:
 
     @loop(1, 1)
     def run(self, suite_index, case_index):
-        suite = self.suite(suite_index)
-        suite.click()
-        time.sleep(1)
-        
         case = self.case(suite_index, case_index)
-        if not case: return None
+        if not case: 
+            suite = self.suite(suite_index)
+            suite.click()
+            return 
         c_name = self.case_name(case)
         p = self.case_package(case)
-        print("run case %s" % c_name)
+        print("-- %s" % c_name)
         b = case.find_element_by_class_name("android.widget.Button")
+        print(b)
         b.click()
         start = time.time()
         result = self.check_result(b)
         elapsed = time.time() - start
-        print(elapsed)
+        print("-- %s : %s" % (c_name, elapsed))
         return (c_name, p, elapsed, result)
 
     @loop(1)
@@ -167,11 +167,10 @@ def start_devices(udids):
         c['deviceName'] = d
         c['udid'] = d
         device = Device(remote, c)
-        devices.append(device)
         
         que.put(device.start_app())
         devices.append(device)
-        time.sleep(3)
+        time.sleep(5)
     #threads = [threading.Thread(target=lambda q, d: q.put(d.start_app()), args=(que,device)) for device in devices]
     #[t.start() for t in threads]
     #[t.join() for t in threads]
@@ -180,7 +179,6 @@ def start_devices(udids):
 
 
 def run_suite(devices, suite_index):
-    print("run suite %d" % suite_index)
     l = len(devices)
     que = Queue.Queue()
     threads = [threading.Thread(
@@ -222,6 +220,7 @@ if __name__ == '__main__':
     while True:
         suite = devices[0].suite(current)
         name = devices[0].suite_name(suite)
+        print(":: %s" % name)
         r = run_suite(devices, current)
         results.append({name:r})
         current += 1
