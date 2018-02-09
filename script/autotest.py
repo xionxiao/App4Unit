@@ -73,7 +73,7 @@ class Device:
             time.sleep(1)
 
             self.__list_view = self.__driver.find_element_by_class_name("android.widget.ListView")
-            print(self.__driver.capabilities["deviceName"], "boot complete!")
+            print("boot complite: %s" % self.__driver.capabilities["deviceName"])
             return self.__driver 
 
         except WebDriverException,e:
@@ -101,9 +101,8 @@ class Device:
             return 
         c_name = self.case_name(case)
         p = self.case_package(case)
-        print("-- %s" % c_name)
+        print("> %s" % c_name)
         b = case.find_element_by_class_name("android.widget.Button")
-        print(b)
         b.click()
         start = time.time()
         result = self.check_result(b)
@@ -220,7 +219,7 @@ if __name__ == '__main__':
     while True:
         suite = devices[0].suite(current)
         name = devices[0].suite_name(suite)
-        print(":: %s" % name)
+        print("%s" % name)
         r = run_suite(devices, current)
         results.append({name:r})
         current += 1
