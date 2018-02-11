@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 
+import com.github.benoitdion.ln.Ln;
 import com.sparktest.autotestapp.framework.TestCase;
 import com.sparktest.autotestapp.framework.TestFailure;
 import com.sparktest.autotestapp.framework.TestListener;
@@ -21,7 +22,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -33,16 +33,16 @@ public class AppTestRunner extends TestRunner {
     private ObjectGraph injector;
     private AtomicInteger atomic = new AtomicInteger(0);
     private TestCase runningTest;
-    private HandlerThread runnerThread;
     private Handler handler;
 
 
     public AppTestRunner(Context context) {
         this.activity = (TestActivity) context;
-        this.runnerThread = new HandlerThread("Runner Thread");
+        HandlerThread runnerThread = new HandlerThread("Runner Thread");
         runnerThread.start();
         handler = new Handler(runnerThread.getLooper());
 
+        //TODO: Use Assume
         Verify.delegate(s -> {
             runningTest.setState(TestState.Failed);
             resume();
@@ -96,13 +96,14 @@ public class AppTestRunner extends TestRunner {
         testCase.setState(TestState.Running);
 
         try {
+            // TODO: start calculate testcase class timeout
             // Run Started
             activity.runOnUiThread(() -> result.fireTestRunStarted());
 
             // BeforeClass
             executeStaticAnnotatedMethod(testCase, BeforeClass.class);
 
-            runTestMethod(testCase, result);
+            runTestMethods(testCase, result);
 
             // Run Finished
         } catch (Error e) {
@@ -113,18 +114,24 @@ public class AppTestRunner extends TestRunner {
                 // AfterClass
                 executeStaticAnnotatedMethod(testCase, AfterClass.class);
             } catch (Error e) {
+                // TODO: unknown error
                 //e.printStackTrace();
             } finally {
                 // Run Finished
                 activity.runOnUiThread(() -> result.fireTestRunFinished());
                 if (testCase.getState() != TestState.Failed) testCase.setState(TestState.Success);
+                // TODO: end calculate testcase timeout
             }
         }
     }
 
-    protected void runTestMethod(TestCase testCase, TestResult result) {
+    protected void runTestMethods(TestCase testCase, TestResult result) {
         Object instance = createTestInstance(testCase);
         List<Method> methodList = getAnnotationMethods(testCase.getTestClass(), Test.class);
+
+        Handler mainHandler = new Handler(activity.getMainLooper());
+        Runnable timeoutRunnable = null;
+
         for (Method method : methodList) {
             // Before
             executeAnnotatedMethod(testCase, instance, Before.class);
@@ -133,10 +140,22 @@ public class AppTestRunner extends TestRunner {
             activity.runOnUiThread(() -> result.fireTestStarted());
 
             try {
+                // TODO: start calculate test method timeout
+                // long timeout = getAnnotationTimeout(testCase.getTestClass(), method);
+                long timeout = 120L * 1000;
+                timeoutRunnable = () -> {
+                    Ln.e("*****************timeout*********");
+                    Verify.fail("Timeout");
+                };
+                if (timeout > 0) {
+                    mainHandler.postDelayed( timeoutRunnable, timeout);
+                }
                 // Test
                 invokeMethod(testCase, instance, method);
             } finally {
 
+                // TODO: end calculate test method timeout
+                mainHandler.removeCallbacks(timeoutRunnable);
                 // Test Finished
                 activity.runOnUiThread(() -> result.fireTestFinished());
 
@@ -204,26 +223,6 @@ public class AppTestRunner extends TestRunner {
         for (Method method : methods) {
             invokeMethod(testCase, testInstance, method);
         }
-    }
-
-    interface MethodFilter {
-        Boolean filter(Method method);
-    }
-
-    private static List<Method> getAnnotationMethods(Class<?> clazz, Class<? extends Annotation> T) {
-        return getAnnotationMethods(clazz, T, method -> true);
-    }
-
-    private static List<Method> getAnnotationMethods(Class<?> clazz, Class<? extends Annotation> T,
-                                                     MethodFilter filter) {
-        Method methods[] = clazz.getMethods();
-        List<Method> methodList = new ArrayList<>();
-        for (Method method : methods) {
-            if (method.getAnnotation(T) != null && filter.filter(method)) {
-                methodList.add(method);
-            }
-        }
-        return methodList;
     }
 
     private class AppListener implements TestListener {

@@ -12,7 +12,8 @@ device_list = ["HT7360201945","988627323038534235"]
 config = {
     'platformName': 'Android',
     'app': APK_PATH,
-    'newCommandTimeout': 600
+    'newCommandTimeout': 600,
+    'clearDeviceLogsOnStart': True
 }
 
 remote = 'http://127.0.0.1:4723/wd/hub'
@@ -109,12 +110,12 @@ class Device:
         b.click()
         start = time.time()
         result = self.check_result(b)
-        if not result: result = "Failed"
+        if not result: result = "TIMEOUT"
         elapsed = time.time() - start
-        print("-- %s : %s" % (c_name, elapsed))
+        print("-- %s : %s : %s" % (c_name, elapsed, result))
         return (c_name, p, elapsed, result)
 
-    @loop(1, 60)
+    @loop(1, 150)
     def check_result(self, button):
         return False if button.text == "RUNNING" else button.text
 
@@ -173,7 +174,7 @@ def start_devices(udids):
         devices.append(device)
         
         que.put(device.start_app())
-        time.sleep(5)
+        time.sleep(2)
     #threads = [threading.Thread(target=lambda q, d: q.put(d.start_app()), args=(que,device)) for device in devices]
     #[t.start() for t in threads]
     #[t.join() for t in threads]
@@ -241,8 +242,8 @@ if __name__ == '__main__':
         tc = []
         for r in d.values()[0]:
             if not r: continue
-            t = TestCase(r[0], r[1], r[2], r[3] if r[3] == "PASSED" else "", r[3] if r[3] == "FAILED" else "")
-            if r[3] == "FAILED":
+            t = TestCase(r[0], r[1], r[2], r[3] if r[3] == "PASSED" else "", r[3] if r[3] == "FAILED" or r[3] == 'TIMEOUT' else "")
+            if not r[3] == "PASSED":
                 t.add_failure_info(r[1], r[3])
             tc.append(t)
         ts.append(TestSuite(d.keys()[0], tc))
