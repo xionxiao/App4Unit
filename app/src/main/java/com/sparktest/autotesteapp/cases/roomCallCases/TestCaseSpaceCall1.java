@@ -94,7 +94,10 @@ public class TestCaseSpaceCall1 extends TestSuite {
          */
         public void run() {
             actor = TestActor.SparkUser(activity, runner);
-            actor.loginBySparkId(TestActor.sparkUser2,TestActor.SPARK_USER_PASSWORD,this::onRegistered);
+            mHandler.postDelayed(()-> {
+                actor.loginBySparkId(TestActor.sparkUser2,TestActor.SPARK_USER_PASSWORD,this::onRegistered);
+            },1000);
+
         }
 
         /**
@@ -153,7 +156,9 @@ public class TestCaseSpaceCall1 extends TestSuite {
         public void run() {
             super.run();
             actor = TestActor.SparkUser(activity, runner);
-            actor.loginBySparkId(TestActor.sparkUser3,TestActor.SPARK_USER_PASSWORD,this::onRegistered);
+            mHandler.postDelayed(()-> {
+                actor.loginBySparkId(TestActor.sparkUser3,TestActor.SPARK_USER_PASSWORD,this::onRegistered);
+            },1000);
         }
 
         /**
