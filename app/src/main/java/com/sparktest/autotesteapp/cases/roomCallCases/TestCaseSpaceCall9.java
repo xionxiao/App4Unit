@@ -62,6 +62,7 @@ public class TestCaseSpaceCall9 extends TestSuite {
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
+                actor.logout();
             }
         }
 
@@ -169,6 +170,7 @@ public class TestCaseSpaceCall9 extends TestSuite {
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
+                actor.logout();
             }
         }
 
@@ -220,29 +222,33 @@ public class TestCaseSpaceCall9 extends TestSuite {
         @Override
         protected void onRegistered(Result result) {
             Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
-            actor.getPhone().setIncomingCallListener(call -> {
-                Ln.w("Incoming call");
-                actor.onConnected(this::onConnected);
-                actor.onMediaChanged(this::onMediaChanged);
-                actor.onCallMembershipChanged(this::onCallMembershipChanged);
-                actor.onDisconnected(this::onDisconnected);
-                actor.setDefaultCallObserver(call);
+            if (result.isSuccessful()) {
+                actor.getPhone().setIncomingCallListener(call -> {
+                    Ln.w("Incoming call");
+                    actor.onConnected(this::onConnected);
+                    actor.onMediaChanged(this::onMediaChanged);
+                    actor.onCallMembershipChanged(this::onCallMembershipChanged);
+                    actor.onDisconnected(this::onDisconnected);
+                    actor.setDefaultCallObserver(call);
 
-                call.answer(MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface), new CompletionHandler<Void>() {
-                    @Override
-                    public void onComplete(Result<Void> result) {
-                        if (result.isSuccessful()) {
-                            Ln.w("Call: Incoming call Detected");
-                            Verify.verifyTrue(true);
+                    call.answer(MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface), new CompletionHandler<Void>() {
+                        @Override
+                        public void onComplete(Result<Void> result) {
+                            if (result.isSuccessful()) {
+                                Ln.w("Call: Incoming call Detected");
+                                Verify.verifyTrue(true);
+                            } else {
+                                Ln.w("Call: Answer call fail");
+                                Verify.verifyTrue(false);
+                                actor.logout();
+                            }
                         }
-                        else {
-                            Ln.w("Call: Answer call fail");
-                            Verify.verifyTrue(false);
-                            actor.logout();
-                        }
-                    }
+                    });
                 });
-            });
+            } else {
+                Verify.verifyTrue(false);
+                actor.logout();
+            }
         }
 
         @Override

@@ -60,6 +60,7 @@ public class TestCaseSpaceCall17 extends TestSuite {
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
+                actor.logout();
             }
         }
 
@@ -160,6 +161,7 @@ public class TestCaseSpaceCall17 extends TestSuite {
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
+                actor.logout();
             }
         }
 
@@ -193,35 +195,40 @@ public class TestCaseSpaceCall17 extends TestSuite {
         @Override
         protected void onRegistered(Result result) {
             Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
-            actor.getPhone().setIncomingCallListener(call -> {
-                Ln.e("Incoming call");
-                actor.onConnected(this::onConnected);
-                actor.onMediaChanged(this::onMediaChanged);
-                actor.onCallMembershipChanged(this::onCallMembershipChanged);
-                actor.onDisconnected(this::onDisconnected);
-                actor.setDefaultCallObserver(call);
-                if(call.getFrom().getPersonId().equalsIgnoreCase(actor.sparkUserID2)) {
-                    personCall = call;
-                } else {
-                    roomCall = call;
-                }
+            if (result.isSuccessful()) {
+                actor.getPhone().setIncomingCallListener(call -> {
+                    Ln.e("Incoming call");
+                    actor.onConnected(this::onConnected);
+                    actor.onMediaChanged(this::onMediaChanged);
+                    actor.onCallMembershipChanged(this::onCallMembershipChanged);
+                    actor.onDisconnected(this::onDisconnected);
+                    actor.setDefaultCallObserver(call);
+                    if (call.getFrom().getPersonId().equalsIgnoreCase(actor.sparkUserID2)) {
+                        personCall = call;
+                    } else {
+                        roomCall = call;
+                    }
 
-                if (personCall != null && roomCall != null){
-                    personCall.answer(MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface), new CompletionHandler<Void>() {
-                        @Override
-                        public void onComplete(Result<Void> result) {
-                            if (result.isSuccessful()) {
-                                Ln.d("Call: Incoming call Detected");
-                                Verify.verifyTrue(true);
-                            } else {
-                                Ln.d("Call: Answer call fail");
-                                Verify.verifyTrue(false);
-                                actor.logout();
+                    if (personCall != null && roomCall != null) {
+                        personCall.answer(MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface), new CompletionHandler<Void>() {
+                            @Override
+                            public void onComplete(Result<Void> result) {
+                                if (result.isSuccessful()) {
+                                    Ln.d("Call: Incoming call Detected");
+                                    Verify.verifyTrue(true);
+                                } else {
+                                    Ln.d("Call: Answer call fail");
+                                    Verify.verifyTrue(false);
+                                    actor.logout();
+                                }
                             }
-                        }
-                    });
-                }
-            });
+                        });
+                    }
+                });
+            } else {
+                Verify.verifyTrue(false);
+                actor.logout();
+            }
         }
 
         @Override

@@ -56,6 +56,7 @@ public class TestCaseSpaceCall14 extends TestSuite {
 
             } else {
                 Verify.verifyTrue(false);
+                actor.logout();
             }
         }
 
@@ -107,38 +108,43 @@ public class TestCaseSpaceCall14 extends TestSuite {
         @Override
         protected void onRegistered(Result result) {
             Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
-            actor.getPhone().setIncomingCallListener(call -> {
-                Ln.w("Incoming call");
-                actor.onConnected(this::onConnected);
-                actor.onMediaChanged(this::onMediaChanged);
-                actor.onCallMembershipChanged(this::onCallMembershipChanged);
-                actor.onDisconnected(this::onDisconnected);
-                actor.setDefaultCallObserver(call);
-                if (answerOnce) {
-                    call.reject(new CompletionHandler<Void>() {
-                        @Override
-                        public void onComplete(Result<Void> result) {
-                            Ln.w("Call: rejected call result:",result.isSuccessful());
+            if (result.isSuccessful()) {
+                actor.getPhone().setIncomingCallListener(call -> {
+                    Ln.w("Incoming call");
+                    actor.onConnected(this::onConnected);
+                    actor.onMediaChanged(this::onMediaChanged);
+                    actor.onCallMembershipChanged(this::onCallMembershipChanged);
+                    actor.onDisconnected(this::onDisconnected);
+                    actor.setDefaultCallObserver(call);
+                    if (answerOnce) {
+                        call.reject(new CompletionHandler<Void>() {
+                            @Override
+                            public void onComplete(Result<Void> result) {
+                                Ln.w("Call: rejected call result:", result.isSuccessful());
 
-                        }
-                    });
-                } else {
-                    answerOnce = true;
-                    call.answer(MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface), new CompletionHandler<Void>() {
-                        @Override
-                        public void onComplete(Result<Void> result) {
-                            if (result.isSuccessful()) {
-                                Ln.w("Call: Incoming call Detected");
-                                Verify.verifyTrue(true);
-                            } else {
-                                Ln.w("Call: Answer call fail");
-                                Verify.verifyTrue(false);
-                                actor.logout();
                             }
-                        }
-                    });
-                }
-            });
+                        });
+                    } else {
+                        answerOnce = true;
+                        call.answer(MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface), new CompletionHandler<Void>() {
+                            @Override
+                            public void onComplete(Result<Void> result) {
+                                if (result.isSuccessful()) {
+                                    Ln.w("Call: Incoming call Detected");
+                                    Verify.verifyTrue(true);
+                                } else {
+                                    Ln.w("Call: Answer call fail");
+                                    Verify.verifyTrue(false);
+                                    actor.logout();
+                                }
+                            }
+                        });
+                    }
+                });
+            } else {
+                Verify.verifyTrue(false);
+                actor.logout();
+            }
         }
 
         @Override
@@ -181,20 +187,25 @@ public class TestCaseSpaceCall14 extends TestSuite {
         @Override
         protected void onRegistered(Result result) {
             Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
-            actor.getPhone().setIncomingCallListener(call -> {
-                Ln.w("Incoming call");
-                actor.onConnected(this::onConnected);
-                actor.onMediaChanged(this::onMediaChanged);
-                actor.onCallMembershipChanged(this::onCallMembershipChanged);
-                actor.onDisconnected(this::onDisconnected);
-                actor.setDefaultCallObserver(call);
-                call.reject(new CompletionHandler<Void>() {
-                    @Override
-                    public void onComplete(Result<Void> result) {
-                        Ln.w("Caller reject: " + result.isSuccessful());
-                    }
+            if (result.isSuccessful()) {
+                actor.getPhone().setIncomingCallListener(call -> {
+                    Ln.w("Incoming call");
+                    actor.onConnected(this::onConnected);
+                    actor.onMediaChanged(this::onMediaChanged);
+                    actor.onCallMembershipChanged(this::onCallMembershipChanged);
+                    actor.onDisconnected(this::onDisconnected);
+                    actor.setDefaultCallObserver(call);
+                    call.reject(new CompletionHandler<Void>() {
+                        @Override
+                        public void onComplete(Result<Void> result) {
+                            Ln.w("Caller reject: " + result.isSuccessful());
+                        }
+                    });
                 });
-            });
+            } else {
+                Verify.verifyTrue(false);
+                actor.logout();
+            }
         }
 
         @Override

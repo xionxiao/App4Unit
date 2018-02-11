@@ -54,6 +54,7 @@ public class TestCaseSpaceCall21 extends TestSuite {
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
+                actor.logout();
             }
         }
 
@@ -115,6 +116,7 @@ public class TestCaseSpaceCall21 extends TestSuite {
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
+                actor.logout();
             }
         }
 

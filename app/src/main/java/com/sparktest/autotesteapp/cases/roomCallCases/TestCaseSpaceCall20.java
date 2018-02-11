@@ -50,6 +50,7 @@ public class TestCaseSpaceCall20 extends TestSuite {
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
+                actor.logout();
             }
         }
 
