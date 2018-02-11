@@ -35,9 +35,10 @@ public class TestCaseSpaceCall2 extends TestSuite {
     }
 
     @Description("TestActorCall2Person1")
-    public static class TestActorCall2Person1 extends RoomCallingTestActor{
+    public static class TestActorCall2Person1 extends RoomCallingTestActor {
         private boolean leftOnce = false;
         Handler mHandler = new Handler();
+
         /**
          * Main test entrance
          */
@@ -45,15 +46,15 @@ public class TestCaseSpaceCall2 extends TestSuite {
         public void run() {
             super.run();
             actor = TestActor.SparkUser(activity, runner);
-            actor.loginBySparkId(TestActor.sparkUser1,TestActor.SPARK_USER_PASSWORD,this::onRegistered);
+            actor.loginBySparkId(TestActor.sparkUser1, TestActor.SPARK_USER_PASSWORD, this::onRegistered);
         }
 
         /**
-         *  Dial room when register complete
+         * Dial room when register complete
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b", result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -63,7 +64,7 @@ public class TestCaseSpaceCall2 extends TestSuite {
         }
 
         @Override
-        protected void onCallMembershipChanged(CallObserver.CallEvent event){
+        protected void onCallMembershipChanged(CallObserver.CallEvent event) {
             super.onCallMembershipChanged(event);
             if (event instanceof CallObserver.MembershipJoinedEvent && this.person2Joined && this.person3Joined && !this.leftOnce) {
                 hangupCall(event.getCall());
@@ -78,10 +79,9 @@ public class TestCaseSpaceCall2 extends TestSuite {
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
             super.onDisconnected(event);
-            if(this.leftOnce) {
+            if (this.leftOnce) {
                 actor.logout();
-            }
-            else {
+            } else {
                 this.leftOnce = true;
                 mHandler.postDelayed(() -> {
                     actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
@@ -93,11 +93,10 @@ public class TestCaseSpaceCall2 extends TestSuite {
         @Override
         protected void checkMemberships(Call call) {
             super.checkMemberships(call);
-            if(this.person2Joined && this.person3Joined && !this.leftOnce) {
+            if (this.person2Joined && this.person3Joined && !this.leftOnce) {
                 hangupCall(call);
-            }
-            else {
-                for(CallMembership membership:call.getMemberships()) {
+            } else {
+                for (CallMembership membership : call.getMemberships()) {
                     if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID3) && membership.getState() == CallMembership.State.LEFT) {
                         hangupCall(call);
                     }
@@ -125,17 +124,18 @@ public class TestCaseSpaceCall2 extends TestSuite {
          */
         public void run() {
             actor = TestActor.SparkUser(activity, runner);
-            actor.loginBySparkId(TestActor.sparkUser2,TestActor.SPARK_USER_PASSWORD,this::onRegistered);
+            mHandler.postDelayed(() ->
+                    actor.loginBySparkId(TestActor.sparkUser2, TestActor.SPARK_USER_PASSWORD, this::onRegistered), 1000);
         }
 
         /**
-         *  Waiting for incoming call register complete
+         * Waiting for incoming call register complete
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b", result.isSuccessful());
             if (result.isSuccessful()) {
-                actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
+                actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
@@ -143,11 +143,11 @@ public class TestCaseSpaceCall2 extends TestSuite {
         }
 
         @Override
-        protected void onCallMembershipChanged(CallObserver.CallEvent event){
+        protected void onCallMembershipChanged(CallObserver.CallEvent event) {
             super.onCallMembershipChanged(event);
             if (event instanceof CallObserver.MembershipLeftEvent) {
                 if (((CallObserver.MembershipLeftEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID1)
-                        && this.person1Joined && this.person3Joined ) {
+                        && this.person1Joined && this.person3Joined) {
                     Ln.w("Call: Person2 Start Leaving");
                     hangupCall(event.getCall());
                 }
@@ -163,9 +163,9 @@ public class TestCaseSpaceCall2 extends TestSuite {
         @Override
         protected void checkMemberships(Call call) {
             super.checkMemberships(call);
-            for(CallMembership membership:call.getMemberships()) {
+            for (CallMembership membership : call.getMemberships()) {
                 if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID1) && membership.getState() == CallMembership.State.LEFT
-                    && this.person1Joined && this.person3Joined) {
+                        && this.person1Joined && this.person3Joined) {
                     Ln.w("Call: Person2 Start Leaving");
                     hangupCall(call);
                 }
@@ -174,8 +174,9 @@ public class TestCaseSpaceCall2 extends TestSuite {
     }
 
     @Description("TestActorCall1Person3")
-    public static class TestActorCall2Person3 extends RoomCallingTestActor{
+    public static class TestActorCall2Person3 extends RoomCallingTestActor {
         private boolean person1LeftOnce = false;
+
         /**
          * Main test entrance
          */
@@ -183,15 +184,16 @@ public class TestCaseSpaceCall2 extends TestSuite {
         public void run() {
             super.run();
             actor = TestActor.SparkUser(activity, runner);
-            actor.loginBySparkId(TestActor.sparkUser3,TestActor.SPARK_USER_PASSWORD,this::onRegistered);
+            mHandler.postDelayed(() ->
+                    actor.loginBySparkId(TestActor.sparkUser3, TestActor.SPARK_USER_PASSWORD, this::onRegistered), 2000);
         }
 
         /**
-         *  Dial room when register complete
+         * Dial room when register complete
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b", result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -201,7 +203,7 @@ public class TestCaseSpaceCall2 extends TestSuite {
         }
 
         @Override
-        protected void onCallMembershipChanged(CallObserver.CallEvent event){
+        protected void onCallMembershipChanged(CallObserver.CallEvent event) {
             super.onCallMembershipChanged(event);
             if (event instanceof CallObserver.MembershipJoinedEvent
                     && ((CallObserver.MembershipJoinedEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID1)
@@ -226,12 +228,12 @@ public class TestCaseSpaceCall2 extends TestSuite {
         protected void checkMemberships(Call call) {
             super.checkMemberships(call);
 
-            for(CallMembership membership:call.getMemberships()) {
+            for (CallMembership membership : call.getMemberships()) {
                 if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID1)
                         && membership.getState() == CallMembership.State.LEFT
                         && !this.person1LeftOnce) {
                     this.person1LeftOnce = true;
-                } else if(membership.getPersonId().equalsIgnoreCase(actor.sparkUserID1)
+                } else if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID1)
                         && membership.getState() == CallMembership.State.JOINED
                         && this.person1LeftOnce) {
                     hangupCall(call);
