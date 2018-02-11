@@ -39,6 +39,7 @@ import com.sparktest.autotesteapp.cases.TestCaseMuteAudioVideo;
 import com.sparktest.autotesteapp.cases.TestCaseRoom;
 import com.sparktest.autotesteapp.cases.TestCaseTeamAndMemberShip;
 import com.sparktest.autotesteapp.cases.TestCaseWebhooks;
+import com.sparktest.autotesteapp.cases.TestTest;
 import com.sparktest.autotesteapp.cases.roomCallCases.*;
 import com.sparktest.autotesteapp.framework.Test;
 import com.sparktest.autotesteapp.framework.TestCase;
@@ -88,22 +89,11 @@ public class TestActivity extends Activity {
 
         mSuites = new ArrayList<>();
 
-        mSuites.add(new TestCaseCallWhenRinging());
-        mSuites.add(new TestCaseCallWhenConnected());
-        mSuites.add(new TestCaseCallRejectWhenRinging());
-        mSuites.add(new TestCaseCallRejectWhenInit());
-        mSuites.add(new TestCaseHangUpDisconnectedCall());
-        mSuites.add(new TestCaseAudioCall());
-        mSuites.add(new TestCaseAudioCallUnmuteVideo());
-        mSuites.add(new TestCaseMuteAudioVideo());
-        mSuites.add(new TestCaseRoom());
-        mSuites.add(new TestCaseWebhooks());
-        mSuites.add(new TestCaseTeamAndMemberShip());
-        mSuites.add(new TestCaseMultiParticipants_1());
-        mSuites.add(new TestCaseMultiParticipants_2());
-        mSuites.add(new TestCaseCallSequence_1());
-        mSuites.add(new TestCaseCallSequence_2());
-        mSuites.add(new TestCaseKeepCall());
+        /*
+        TestSuite suite = new TestSuite();
+        suite.add(TestTest.class);
+        mSuites.add(suite);
+        */
         mSuites.add(new TestCaseSpaceCall1());
         mSuites.add(new TestCaseSpaceCall2());
         mSuites.add(new TestCaseSpaceCall3());
@@ -127,6 +117,23 @@ public class TestActivity extends Activity {
         mSuites.add(new TestCaseSpaceCall21());
         mSuites.add(new TestCaseSpaceCall22());
         mSuites.add(new TestCaseSpaceCall23());
+
+        mSuites.add(new TestCaseCallWhenRinging());
+        mSuites.add(new TestCaseCallWhenConnected());
+        mSuites.add(new TestCaseCallRejectWhenRinging());
+        mSuites.add(new TestCaseCallRejectWhenInit());
+        mSuites.add(new TestCaseHangUpDisconnectedCall());
+        mSuites.add(new TestCaseAudioCall());
+        mSuites.add(new TestCaseAudioCallUnmuteVideo());
+        mSuites.add(new TestCaseMuteAudioVideo());
+        //mSuites.add(new TestCaseRoom());
+        mSuites.add(new TestCaseWebhooks());
+        mSuites.add(new TestCaseTeamAndMemberShip());
+        //mSuites.add(new TestCaseMultiParticipants_1());
+        //mSuites.add(new TestCaseMultiParticipants_2());
+        mSuites.add(new TestCaseCallSequence_1());
+        mSuites.add(new TestCaseCallSequence_2());
+        mSuites.add(new TestCaseKeepCall());
 
         TestCaseAdapter adapter = new TestCaseAdapter(this, mSuites);
         mListView.setAdapter(adapter);

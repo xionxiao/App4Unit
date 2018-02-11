@@ -63,7 +63,6 @@ public class TestCaseSpaceCall7 extends TestSuite {
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -169,13 +168,12 @@ public class TestCaseSpaceCall7 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID2,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -201,7 +199,7 @@ public class TestCaseSpaceCall7 extends TestSuite {
                 if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID1)
                         && this.person1Joined
                         && membership.getState() == CallMembership.State.LEFT) {
-                    Ln.d("Call: Person2 hangup");
+                    Ln.w("Call: Person2 hangup");
                     hangupCall(call);
                 }
             }
@@ -226,7 +224,7 @@ public class TestCaseSpaceCall7 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if(result.isSuccessful()) {
                 actor.getPhone().setIncomingCallListener(call -> {
                     Ln.e("Incoming call");
@@ -240,10 +238,10 @@ public class TestCaseSpaceCall7 extends TestSuite {
                         @Override
                         public void onComplete(Result<Void> result) {
                             if (result.isSuccessful()) {
-                                Ln.d("Call: Incoming call Detected");
+                                Ln.w("Call: Incoming call Detected");
                                 Verify.verifyTrue(true);
                             } else {
-                                Ln.d("Call: Answer call fail");
+                                Ln.w("Call: Answer call fail");
                                 Verify.verifyTrue(false);
                                 actor.logout();
                             }
@@ -252,7 +250,6 @@ public class TestCaseSpaceCall7 extends TestSuite {
                 });
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 

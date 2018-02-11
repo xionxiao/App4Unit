@@ -49,7 +49,7 @@ public class TestCaseSpaceCall22 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -71,7 +71,6 @@ public class TestCaseSpaceCall22 extends TestSuite {
 
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -87,7 +86,7 @@ public class TestCaseSpaceCall22 extends TestSuite {
         }
 
         protected void onSecondCallSetup(Result<Call> result) {
-            Ln.d("Caller onCallSetup result: %b" , result.isSuccessful());
+            Ln.w("Caller onCallSetup result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 Verify.verifyTrue("Created other call",false);
             } else {
@@ -134,13 +133,12 @@ public class TestCaseSpaceCall22 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.sparkUser1,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 

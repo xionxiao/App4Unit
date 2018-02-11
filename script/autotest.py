@@ -84,7 +84,10 @@ class Device:
             return None 
 
     def close_app(self):
-        self.__driver.close_app()
+        try:
+            self.__driver.close_app()
+        except WebDriverException, e:
+            print("WebDriverException:",e, self.__config)
 
     @loop(1, 3)
     def allow_permission(self):

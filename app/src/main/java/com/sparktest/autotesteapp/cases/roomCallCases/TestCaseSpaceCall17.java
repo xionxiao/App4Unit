@@ -54,13 +54,12 @@ public class TestCaseSpaceCall17 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID2, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -96,7 +95,7 @@ public class TestCaseSpaceCall17 extends TestSuite {
             actor.getSpark().memberships().create(actor.SPARK_ROOM_CALL_ROOM_ID2, actor.sparkUserID3, null, false, new CompletionHandler<Membership>() {
                 @Override
                 public void onComplete(Result<Membership> result) {
-                    Ln.d("onTeamMemberShipCreated: %b" , result.isSuccessful());
+                    Ln.w("onTeamMemberShipCreated: %b" , result.isSuccessful());
                     if (result.isSuccessful()) {
                         if (result.getData().getPersonEmail().equalsIgnoreCase(actor.sparkUser3)) {
                             personThreeMembershipID = result.getData().getId();
@@ -155,13 +154,12 @@ public class TestCaseSpaceCall17 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.sparkUser3, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -195,7 +193,7 @@ public class TestCaseSpaceCall17 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().setIncomingCallListener(call -> {
                     Ln.e("Incoming call");
@@ -215,10 +213,10 @@ public class TestCaseSpaceCall17 extends TestSuite {
                             @Override
                             public void onComplete(Result<Void> result) {
                                 if (result.isSuccessful()) {
-                                    Ln.d("Call: Incoming call Detected");
+                                    Ln.w("Call: Incoming call Detected");
                                     Verify.verifyTrue(true);
                                 } else {
-                                    Ln.d("Call: Answer call fail");
+                                    Ln.w("Call: Answer call fail");
                                     Verify.verifyTrue(false);
                                     actor.logout();
                                 }
@@ -228,7 +226,6 @@ public class TestCaseSpaceCall17 extends TestSuite {
                 });
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -249,10 +246,10 @@ public class TestCaseSpaceCall17 extends TestSuite {
                     @Override
                     public void onComplete(Result<Void> result) {
                         if (result.isSuccessful()) {
-                            Ln.d("Call: Incoming call Detected");
+                            Ln.w("Call: Incoming call Detected");
                             Verify.verifyTrue(true);
                         } else {
-                            Ln.d("Call: Answer call fail");
+                            Ln.w("Call: Answer call fail");
                             Verify.verifyTrue(false);
                             actor.logout();
                         }

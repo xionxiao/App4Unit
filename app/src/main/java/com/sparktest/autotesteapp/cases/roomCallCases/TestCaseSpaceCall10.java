@@ -83,11 +83,7 @@ public class TestCaseSpaceCall10 extends TestSuite {
 
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
-
-
-
         }
 
         @Override
@@ -148,7 +144,6 @@ public class TestCaseSpaceCall10 extends TestSuite {
 
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 

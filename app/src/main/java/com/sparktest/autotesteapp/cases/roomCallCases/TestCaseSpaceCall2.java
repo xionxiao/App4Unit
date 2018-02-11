@@ -53,13 +53,12 @@ public class TestCaseSpaceCall2 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -70,7 +69,7 @@ public class TestCaseSpaceCall2 extends TestSuite {
                 hangupCall(event.getCall());
             } else if (event instanceof CallObserver.MembershipLeftEvent) {
                 if (((CallObserver.MembershipLeftEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID3)) {
-                    Ln.d("Call: Person3 Left Detected");
+                    Ln.w("Call: Person3 Left Detected");
                     hangupCall(event.getCall());
                 }
             }
@@ -109,7 +108,7 @@ public class TestCaseSpaceCall2 extends TestSuite {
         @Override
         protected void hangupCall(Call call) {
             call.hangup(result -> {
-                Ln.d("call hangup");
+                Ln.w("call hangup");
                 Verify.verifyTrue(result.isSuccessful());
 
             });
@@ -134,13 +133,12 @@ public class TestCaseSpaceCall2 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -150,7 +148,7 @@ public class TestCaseSpaceCall2 extends TestSuite {
             if (event instanceof CallObserver.MembershipLeftEvent) {
                 if (((CallObserver.MembershipLeftEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID1)
                         && this.person1Joined && this.person3Joined ) {
-                    Ln.d("Call: Person2 Start Leaving");
+                    Ln.w("Call: Person2 Start Leaving");
                     hangupCall(event.getCall());
                 }
             }
@@ -168,7 +166,7 @@ public class TestCaseSpaceCall2 extends TestSuite {
             for(CallMembership membership:call.getMemberships()) {
                 if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID1) && membership.getState() == CallMembership.State.LEFT
                     && this.person1Joined && this.person3Joined) {
-                    Ln.d("Call: Person2 Start Leaving");
+                    Ln.w("Call: Person2 Start Leaving");
                     hangupCall(call);
                 }
             }
@@ -193,13 +191,12 @@ public class TestCaseSpaceCall2 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -213,7 +210,7 @@ public class TestCaseSpaceCall2 extends TestSuite {
             } else if (event instanceof CallObserver.MembershipLeftEvent) {
                 if (((CallObserver.MembershipLeftEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID1)
                         && !this.person1LeftOnce) {
-                    Ln.d("Call: Person1 first Left Detected");
+                    Ln.w("Call: Person1 first Left Detected");
                     this.person1LeftOnce = true;
                 }
             }

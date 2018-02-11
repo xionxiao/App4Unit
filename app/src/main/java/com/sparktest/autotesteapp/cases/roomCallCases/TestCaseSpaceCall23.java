@@ -45,13 +45,12 @@ public class TestCaseSpaceCall23 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -92,13 +91,12 @@ public class TestCaseSpaceCall23 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.sparkUser3,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -130,11 +128,11 @@ public class TestCaseSpaceCall23 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().setIncomingCallListener(call -> {
-                    Ln.d("Callee IncomingCall");
-                    call.acknowledge(c -> Ln.d("Callee acknowledge call"));
+                    Ln.w("Callee IncomingCall");
+                    call.acknowledge(c -> Ln.w("Callee acknowledge call"));
                     actor.onConnected(this::onConnected);
                     actor.onDisconnected(this::onDisconnected);
                     actor.setDefaultCallObserver(call);
@@ -143,7 +141,6 @@ public class TestCaseSpaceCall23 extends TestSuite {
                 });
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
