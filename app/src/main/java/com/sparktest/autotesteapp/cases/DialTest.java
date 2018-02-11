@@ -34,6 +34,7 @@ public class DialTest {
     public void run() {
         actor = TestActor.JwtUser(activity, runner, TestActor.jwtKey2);
         //assertTrue(false);
+        //actor.loginBySparkId(this::onRegistered);
         actor.login(this::onRegistered);
     }
 

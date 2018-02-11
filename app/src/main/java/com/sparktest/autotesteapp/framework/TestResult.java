@@ -5,9 +5,11 @@ import com.github.benoitdion.ln.Ln;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TestResult {
     protected List<TestListener> listeners = new ArrayList<>();
+    protected CopyOnWriteArrayList<TestFailure> failures = new CopyOnWriteArrayList<>();
 
     public TestResult() {
     }
@@ -29,7 +31,7 @@ public class TestResult {
     }
 
     public int getFailureCount() {
-        return 0;
+        return failures.size();
     }
 
     public int getIgnoreCount() {
@@ -37,15 +39,19 @@ public class TestResult {
     }
 
     public List<TestFailure> getFailures() {
-        return new ArrayList<TestFailure>();
+        return failures;
     }
 
     public long getRunTime() {
         return 0L;
     }
 
+    public synchronized void addFailure(TestFailure failure) {
+        this.failures.add(failure);
+    }
+
     public boolean wasSuccessful() {
-        return false;
+        return getFailureCount() == 0;
     }
 
     private void fire(Statement statement) {

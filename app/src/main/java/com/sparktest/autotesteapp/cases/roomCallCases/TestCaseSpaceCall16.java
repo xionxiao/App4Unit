@@ -60,9 +60,9 @@ public class TestCaseSpaceCall16 extends TestSuite {
         @Override
         protected void onCallMembershipChanged(CallObserver.CallEvent event){
             super.onCallMembershipChanged(event);
-            if (event instanceof CallObserver.MembershipLeftEvent
+            if (event instanceof CallObserver.MembershipJoinedEvent
                     && ((CallObserver.MembershipJoinedEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID2)) {
-                Ln.d("Call: Person2 Left Detected");
+                Ln.d("Call: Person2 Join Detected");
                 hangupCall(event.getCall());
             }
         }
@@ -104,7 +104,6 @@ public class TestCaseSpaceCall16 extends TestSuite {
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
             if (event instanceof CallObserver.RemoteDecline) {
                 mHandler.postDelayed(() -> {
                     actor.getPhone().dial(actor.sparkUser3, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
@@ -116,6 +115,7 @@ public class TestCaseSpaceCall16 extends TestSuite {
                             this::onCallSetup);
                 },3000);
             } else {
+                super.onDisconnected(event);
                 actor.logout();
             }
         }
@@ -203,8 +203,10 @@ public class TestCaseSpaceCall16 extends TestSuite {
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
-            actor.logout();
+            if (event instanceof CallObserver.LocalLeft) {
+                super.onDisconnected(event);
+                actor.logout();
+            }
         }
     }
 

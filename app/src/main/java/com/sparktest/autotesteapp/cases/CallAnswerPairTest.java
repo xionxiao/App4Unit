@@ -10,6 +10,7 @@ import com.github.benoitdion.ln.Ln;
 import com.sparktest.autotesteapp.AppTestRunner;
 import com.sparktest.autotesteapp.TestActivity;
 import com.sparktest.autotesteapp.framework.TestSuite;
+import com.sparktest.autotesteapp.framework.Verify;
 import com.sparktest.autotesteapp.framework.annotation.Description;
 import com.sparktest.autotesteapp.framework.annotation.Test;
 import com.sparktest.autotesteapp.utils.TestActor;
@@ -35,16 +36,20 @@ public class CallAnswerPairTest extends TestSuite {
         @Test
         public void run() {
             actor = TestActor.JwtUser(activity, runner, TestActor.jwtKey2);
-            actor.login(this::onRegistered);
+            Verify.verifyTrue(false);
+            //actor.login(this::onRegistered);
         }
 
         /**
          * Dial jwtUser1 when register complete
          */
         private void onRegistered(Result result) {
+            /*
             actor.getPhone().dial(TestActor.jwtUser1,
                     MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                     this::onCallSetup);
+                    */
+            //actor.logout();
         }
 
         /**
@@ -80,6 +85,7 @@ public class CallAnswerPairTest extends TestSuite {
          * Waiting for incoming call register complete
          */
         private void onRegistered(Result result) {
+            /*
             actor.getPhone().setIncomingCallListener(call -> {
                 actor.onConnected(this::shutdown);
                 actor.onDisconnected(c -> runner.resume());
@@ -87,6 +93,9 @@ public class CallAnswerPairTest extends TestSuite {
                 call.answer(MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         r -> Ln.e("answering call"));
             });
+            */
+            //actor.logout();
+            runner.resume();
         }
 
         /**
