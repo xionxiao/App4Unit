@@ -10,7 +10,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.sparktest.autotesteapp.TestActivity">
+        tools:context="com.sparktest.autotesteapp.com.sparktest.autotestapp.TestActivity">
 
         <com.webex.wseclient.WseSurfaceView
             android:id="@+id/localView"

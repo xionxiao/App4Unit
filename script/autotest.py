@@ -12,7 +12,7 @@ device_list = ["HT7360201945","988627323038534235"]
 config = {
     'platformName': 'Android',
     'app': APK_PATH,
-    'newCommandTimeout': 300
+    'newCommandTimeout': 600
 }
 
 remote = 'http://127.0.0.1:4723/wd/hub'
@@ -109,11 +109,12 @@ class Device:
         b.click()
         start = time.time()
         result = self.check_result(b)
+        if not result: result = "Failed"
         elapsed = time.time() - start
         print("-- %s : %s" % (c_name, elapsed))
         return (c_name, p, elapsed, result)
 
-    @loop(1)
+    @loop(1, 60)
     def check_result(self, button):
         return False if button.text == "RUNNING" else button.text
 
@@ -169,9 +170,9 @@ def start_devices(udids):
         c['deviceName'] = d
         c['udid'] = d
         device = Device(remote, c)
+        devices.append(device)
         
         que.put(device.start_app())
-        devices.append(device)
         time.sleep(5)
     #threads = [threading.Thread(target=lambda q, d: q.put(d.start_app()), args=(que,device)) for device in devices]
     #[t.start() for t in threads]
