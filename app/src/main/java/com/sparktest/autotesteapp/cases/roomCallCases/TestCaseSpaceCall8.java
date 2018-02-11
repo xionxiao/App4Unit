@@ -63,7 +63,6 @@ public class TestCaseSpaceCall8 extends TestSuite {
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -170,7 +169,6 @@ public class TestCaseSpaceCall8 extends TestSuite {
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -250,7 +248,6 @@ public class TestCaseSpaceCall8 extends TestSuite {
                 });
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 

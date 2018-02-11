@@ -47,13 +47,12 @@ public class TestCaseSpaceCall1 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -63,7 +62,7 @@ public class TestCaseSpaceCall1 extends TestSuite {
             if (event instanceof CallObserver.MembershipLeftEvent) {
                 if (((CallObserver.MembershipLeftEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID3)
                         && this.person2Joined && this.person3Joined ) {
-                    Ln.d("Call: Person3 Left Detected");
+                    Ln.w("Call: Person3 Left Detected");
                     hangupCall(event.getCall());
                 }
             }
@@ -103,13 +102,12 @@ public class TestCaseSpaceCall1 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -123,7 +121,7 @@ public class TestCaseSpaceCall1 extends TestSuite {
             super.onCallMembershipChanged(event);
             if (event instanceof CallObserver.MembershipJoinedEvent) {
                 if (this.person1Joined && this.person3Joined ) {
-                    Ln.d("Call: Person2 Start Leaving");
+                    Ln.w("Call: Person2 Start Leaving");
                     hangupCall(event.getCall());
                 }
             }
@@ -139,7 +137,7 @@ public class TestCaseSpaceCall1 extends TestSuite {
         protected void checkMemberships(Call call) {
             super.checkMemberships(call);
             if (this.person1Joined && this.person3Joined) {
-                Ln.d("Call: Person2 Start Leaving");
+                Ln.w("Call: Person2 Start Leaving");
                 hangupCall(call);
             }
         }
@@ -163,13 +161,12 @@ public class TestCaseSpaceCall1 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -179,7 +176,7 @@ public class TestCaseSpaceCall1 extends TestSuite {
             if (event instanceof CallObserver.MembershipLeftEvent) {
                 if (((CallObserver.MembershipLeftEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID2)
                         && this.person1Joined && this.person2Joined ) {
-                    Ln.d("Call: Person2 Left Detected");
+                    Ln.w("Call: Person2 Left Detected");
                     hangupCall(event.getCall());
                 }
             }

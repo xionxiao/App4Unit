@@ -47,13 +47,12 @@ public class TestCaseSpaceCall16 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID2, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -62,7 +61,7 @@ public class TestCaseSpaceCall16 extends TestSuite {
             super.onCallMembershipChanged(event);
             if (event instanceof CallObserver.MembershipJoinedEvent
                     && ((CallObserver.MembershipJoinedEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID2)) {
-                Ln.d("Call: Person2 Join Detected");
+                Ln.w("Call: Person2 Join Detected");
                 hangupCall(event.getCall());
             }
         }
@@ -70,7 +69,6 @@ public class TestCaseSpaceCall16 extends TestSuite {
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
             super.onDisconnected(event);
-            actor.logout();
         }
 
     }
@@ -92,13 +90,12 @@ public class TestCaseSpaceCall16 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.sparkUser3, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -147,7 +144,7 @@ public class TestCaseSpaceCall16 extends TestSuite {
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.d("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().setIncomingCallListener(call -> {
                     Ln.e("Incoming call");
@@ -161,10 +158,10 @@ public class TestCaseSpaceCall16 extends TestSuite {
                             @Override
                             public void onComplete(Result<Void> result) {
                                 if (result.isSuccessful()) {
-                                    Ln.d("Call: rejected call");
+                                    Ln.w("Call: rejected call");
                                     Verify.verifyTrue(true);
                                 } else {
-                                    Ln.d("Call: rejected call fail");
+                                    Ln.w("Call: rejected call fail");
                                     Verify.verifyTrue(false);
                                     actor.logout();
                                 }
@@ -176,10 +173,10 @@ public class TestCaseSpaceCall16 extends TestSuite {
                             @Override
                             public void onComplete(Result<Void> result) {
                                 if (result.isSuccessful()) {
-                                    Ln.d("Call: Incoming call Detected");
+                                    Ln.w("Call: Incoming call Detected");
                                     Verify.verifyTrue(true);
                                 } else {
-                                    Ln.d("Call: Answer call fail");
+                                    Ln.w("Call: Answer call fail");
                                     Verify.verifyTrue(false);
                                     actor.logout();
                                 }
@@ -189,7 +186,6 @@ public class TestCaseSpaceCall16 extends TestSuite {
                 });
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 

@@ -113,7 +113,7 @@ public class TestActor {
         spark = new Spark(activity.getApplication(), auth);
         auth.authorize(result -> {
             if (result.isSuccessful()) {
-                Ln.d("loginBySparkId isSuccessful!");
+                Ln.w("loginBySparkId isSuccessful!");
                 phone = spark.phone();
                 phone.register(r -> {
                     if (r.isSuccessful()) {
@@ -141,7 +141,7 @@ public class TestActor {
         spark = new Spark(activity.getApplication(), auth);
         auth.authorize(result -> {
             if (result.isSuccessful()) {
-                Ln.d("loginBySparkId isSuccessful!");
+                Ln.w("loginBySparkId isSuccessful!");
                 phone = spark.phone();
                 phone.register(r -> {
                     if (r.isSuccessful()) {

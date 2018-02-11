@@ -58,7 +58,6 @@ public class TestCaseSpaceCall11 extends TestSuite {
                 },10000);
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -131,7 +130,6 @@ public class TestCaseSpaceCall11 extends TestSuite {
                 });
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
@@ -200,7 +198,6 @@ public class TestCaseSpaceCall11 extends TestSuite {
                 });
             } else {
                 Verify.verifyTrue(false);
-                actor.logout();
             }
         }
 
