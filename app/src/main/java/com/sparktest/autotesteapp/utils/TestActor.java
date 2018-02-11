@@ -34,20 +34,20 @@ public class TestActor {
     private static final String SCOPE = "spark:all";
 
     /*roomid of the room contains sparkid1 and sparkid2 and sparkid3*/
-    public static final String SPARK_ROOM_CALL_ROOM_ID = "Y2lzY29zcGFyazovL3VzL1JPT00vZTRlOTk4ZDAtZTU1My0xMWU3LWE2M2QtZTFjYmVjZjExMGJj";
+    public static final String SPARK_ROOM_CALL_ROOM_ID = "Y2lzY29zcGFyazovL3VzL1JPT00vZDNiNDdiZjAtMGVmNC0xMWU4LWFhMzItYWQyMDFjZmIxMTA4";
 
     /*roomid of the room contains sparkid1 and sparkid2 */
-    public static final String SPARK_ROOM_CALL_ROOM_ID2 = "Y2lzY29zcGFyazovL3VzL1JPT00vMzViNTMyYjAtZTZjNi0xMWU3LWIyYzctMGJkNDA4MWU4MjNl";
+    public static final String SPARK_ROOM_CALL_ROOM_ID2 = "Y2lzY29zcGFyazovL3VzL1JPT00vZjA3MDQ5ZTAtMGVmNC0xMWU4LWI3YjItNmZhYzJhZjE0YWU3";
 
 
     public static String sparkUser1 = "sparksdktestuser8@tropo.com";
     public static String sparkUser2 = "sparksdktestuser9@tropo.com";
     public static String sparkUser3 = "sparksdktestuser10@tropo.com";
-    public static String sparkUserID1 = "5992bb3d-55c0-4a1b-945f-213fc191076f";
-    public static String sparkUserID2 = "e717cd96-d671-4794-80b5-5a92646e7a7b";
-    public static String sparkUserID3 = "be1c4a46-f08c-47ec-868f-06a71e6f1f0f";
+    public static String sparkUserID1 = "4f9a9bc8-0a4f-4b6f-9768-98ce20621c61";
+    public static String sparkUserID2 = "9b632c71-5f47-43f7-b770-43ec431b64ec";
+    public static String sparkUserID3 = "64a8c130-dc5b-4fb5-947b-b43ecdd0e422";
 
-    public static String SPARK_USER_PASSWORD = "Test(123)";
+    public static String SPARK_USER_PASSWORD = "Test123@cisco";
 
     TestActivity activity;
     AppTestRunner runner;
