@@ -139,7 +139,7 @@ public class RoomCallingTestActor {
 
     protected void hangupCall(Call call) {
         Ln.w("hangupCall in");
-        if (call.getStatus() == Call.CallStatus.CONNECTED) {
+        if (call != null && call.getStatus() == Call.CallStatus.CONNECTED) {
             Ln.w("hangupCall hang up connected call!");
             call.hangup(result -> {
                 Ln.w("call hangup finish");

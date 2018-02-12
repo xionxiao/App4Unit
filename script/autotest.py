@@ -60,6 +60,7 @@ class Device:
 
     def start_app(self):
         try:
+            print("start test app")
             self.__driver = webdriver.Remote(self.__remote, self.__config)
 
             # sleep more than 2 seconds waiting for permission grant in app
