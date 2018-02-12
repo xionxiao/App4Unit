@@ -108,11 +108,6 @@ public class TestActivity extends Activity {
 
         mSuites = new ArrayList<>();
 
-        /*
-        TestSuite suite = new TestSuite();
-        suite.add(TestTest.class);
-        mSuites.add(suite);
-        */
         mSuites.add(new TestCaseSpaceCall1());
         mSuites.add(new TestCaseSpaceCall2());
         mSuites.add(new TestCaseSpaceCall3());

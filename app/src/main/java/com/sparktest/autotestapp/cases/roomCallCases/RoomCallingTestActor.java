@@ -9,6 +9,7 @@ import com.ciscospark.androidsdk.phone.CallObserver;
 import com.github.benoitdion.ln.Ln;
 import com.sparktest.autotestapp.TestActivity;
 import com.sparktest.autotestapp.framework.Verify;
+import com.sparktest.autotestapp.framework.annotation.After;
 import com.sparktest.autotestapp.framework.annotation.Description;
 import com.sparktest.autotestapp.framework.annotation.Test;
 import com.sparktest.autotestapp.AppTestRunner;
@@ -30,6 +31,8 @@ public class RoomCallingTestActor {
 
     TestActor actor;
 
+    Call activeCall;
+
     protected boolean person1Joined = false;
     protected boolean person2Joined = false;
     protected boolean person3Joined = false;
@@ -41,6 +44,17 @@ public class RoomCallingTestActor {
      */
     @Test
     public void run() {
+    }
+
+    @After
+    public void cleanup() {
+        Ln.e("============= after test clean up =============");
+        if (activeCall != null) {
+            hangupCall(activeCall);
+        }
+        if (actor != null) {
+            actor.logout();
+        }
     }
 
     /**
@@ -74,6 +88,7 @@ public class RoomCallingTestActor {
 
     protected void onConnected(Call call){
         Ln.w("Caller, onConnected");
+        activeCall = call;
         checkMemberships(call);
     }
 
@@ -99,6 +114,9 @@ public class RoomCallingTestActor {
 
     protected void onDisconnected(CallObserver.CallEvent event) {
         Ln.w("Caller onDisconnected: " + event.toString());
+        if (event.getCall().equals(activeCall)) {
+            activeCall = null;
+        }
         Verify.verifyTrue(event instanceof CallObserver.LocalLeft);
         Verify.verifyTrue(event.getCall().getStatus() == Call.CallStatus.DISCONNECTED);
     }
@@ -130,6 +148,4 @@ public class RoomCallingTestActor {
         }
         Ln.w("hangupCall out");
     }
-
-
 }

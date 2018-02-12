@@ -7,6 +7,7 @@ import com.ciscospark.androidsdk.phone.CallObserver;
 import com.ciscospark.androidsdk.phone.MediaOption;
 import com.github.benoitdion.ln.Ln;
 import com.sparktest.autotestapp.framework.Verify;
+import com.sparktest.autotestapp.framework.annotation.After;
 import com.sparktest.autotestapp.framework.annotation.Description;
 import com.sparktest.autotestapp.framework.TestSuite;
 import com.sparktest.autotestapp.framework.annotation.Test;
@@ -19,9 +20,9 @@ import com.sparktest.autotestapp.utils.TestActor;
 public class TestCaseSpaceCall1 extends TestSuite {
 
     /**
-     * step 1:P1,P2,P3 call the same room \n
+     * step 1: P1,P2,P3 call the same room \n
      * step 2: P2 left \n
-     * step 3:P3 left \n
+     * step 3: P3 left \n
      * step 4: P1 left
      */
     public TestCaseSpaceCall1() {
@@ -30,7 +31,7 @@ public class TestCaseSpaceCall1 extends TestSuite {
         this.add(TestCaseSpaceCall1.TestActorCall1Person3.class);
     }
 
-    @Description("TestActorCall1Person1")
+    @Description("Person1")
     public static class TestActorCall1Person1 extends RoomCallingTestActor{
         /**
          * Main test entrance
@@ -85,7 +86,7 @@ public class TestCaseSpaceCall1 extends TestSuite {
         }
     }
 
-    @Description("TestActorCall1Person2")
+    @Description("Person2")
     public static class TestActorCall1Person2 extends RoomCallingTestActor {
 
         @Test
@@ -146,7 +147,7 @@ public class TestCaseSpaceCall1 extends TestSuite {
         }
     }
 
-    @Description("TestActorCall1Person3")
+    @Description("Person3")
     public static class TestActorCall1Person3 extends RoomCallingTestActor {
 
         /**

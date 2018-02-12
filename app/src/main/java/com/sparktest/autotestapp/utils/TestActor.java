@@ -9,11 +9,9 @@ import com.ciscospark.androidsdk.phone.Call;
 import com.ciscospark.androidsdk.phone.CallObserver;
 import com.ciscospark.androidsdk.phone.Phone;
 import com.github.benoitdion.ln.Ln;
+import com.sparktest.autotestapp.AppTestRunner;
 import com.sparktest.autotestapp.TestActivity;
 import com.sparktest.autotestapp.framework.Verify;
-import com.sparktest.autotestapp.AppTestRunner;
-
-import static com.sparktest.autotestapp.framework.Verify.verifyTrue;
 
 public class TestActor {
     public static String jwtKey1 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzcGFya1NES1Rlc3Q5IiwibmFtZSI6InNwYXJrU0RLVGVzdDkiLCJpc3MiOiJjZDVjOWFmNy04ZWQzLTRlMTUtOTcwNS0wMjVlZjMwYjFiNmEifQ.4u5cET50gjX8RT3NxTj98ffQ0WnlMm0vr7AxsfZrVOg";
