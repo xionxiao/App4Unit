@@ -23,7 +23,7 @@ public class TestActor {
     public static String jwtUserID1 = "dce2861a-debb-4834-802b-6f08515c0bf2";
     public static String jwtUserID2 = "11bc13ac-5a84-4a1f-a1be-4b0910e8d10d";
     public static String jwtUserID3 = "6a884170-7a18-470b-a006-52ab4c72b47a";
-    private static String SparkUserEmail = "sparksdktestuser16@tropo.com";
+    public static String SparkUserEmail = "sparksdktestuser16@tropo.com";
     private static String SparkUserName = "sparksdktestuser16";
     private static String SparkUserPwd = "Test(123)";
     private static final String CLIENT_ID = "C416dd36dd57b536a35816978e4f063a98849d285ca191f5566a32c0f0c3481ab";
@@ -37,13 +37,14 @@ public class TestActor {
     /*roomid of the room contains sparkid1 and sparkid2 */
     public static final String SPARK_ROOM_CALL_ROOM_ID2 = "Y2lzY29zcGFyazovL3VzL1JPT00vZjA3MDQ5ZTAtMGVmNC0xMWU4LWI3YjItNmZhYzJhZjE0YWU3";
 
-
+    public static final String SPARK_ROOM_CALL_ROOM_ID3 = "Y2lzY29zcGFyazovL3VzL1JPT00vOWM2ZjQyZDAtMGFmNi0xMWU4LTg2ODQtZmQ0MTFjYTUzOWZl";
     public static String sparkUser1 = "sparksdktestuser8@tropo.com";
     public static String sparkUser2 = "sparksdktestuser9@tropo.com";
     public static String sparkUser3 = "sparksdktestuser10@tropo.com";
     public static String sparkUserID1 = "4f9a9bc8-0a4f-4b6f-9768-98ce20621c61";
     public static String sparkUserID2 = "9b632c71-5f47-43f7-b770-43ec431b64ec";
     public static String sparkUserID3 = "64a8c130-dc5b-4fb5-947b-b43ecdd0e422";
+    public static String sparkUser3MemberShipID = "Y2lzY29zcGFyazovL3VzL01FTUJFUlNISVAvNjRhOGMxMzAtZGM1Yi00ZmI1LTk0N2ItYjQzZWNkZDBlNDIyOmYwNzA0OWUwLTBlZjQtMTFlOC1iN2IyLTZmYWMyYWYxNGFlNw";
 
     public static String SPARK_USER_PASSWORD = "Test123@cisco";
 
@@ -134,12 +135,14 @@ public class TestActor {
         runner.await();
     }
 
+    public String currentUser;
     public void loginBySparkId(String username, String password, CompletionHandler<Void> handler) {
         OAuthTestUserAuthenticator auth = new OAuthTestUserAuthenticator(CLIENT_ID, CLIENT_SEC, SCOPE, REDIRECT_URL, username, username, password);
         spark = new Spark(activity.getApplication(), auth);
         auth.authorize(result -> {
             if (result.isSuccessful()) {
                 Ln.w("loginBySparkId isSuccessful!");
+                currentUser = username;
                 phone = spark.phone();
                 phone.register(r -> {
                     if (r.isSuccessful()) {

@@ -52,6 +52,14 @@ public class RoomCallingTestActor {
         if (activeCall != null) {
             hangupCall(activeCall);
         }
+
+        if (actor.currentUser.endsWith(TestActor.sparkUser1)){
+            Ln.d("memberships delete");
+            actor.getSpark().memberships().delete(TestActor.sparkUser3MemberShipID, result -> {
+                Ln.d("deleteMembership: " + result.isSuccessful());
+            });
+        }
+
         if (actor != null) {
             actor.logout();
         }
