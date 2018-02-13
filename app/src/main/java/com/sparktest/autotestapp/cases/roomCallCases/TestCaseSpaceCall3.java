@@ -18,13 +18,13 @@ import com.sparktest.autotestapp.utils.TestActor;
 
 public class TestCaseSpaceCall3 extends TestSuite {
     /**
-     step 1:P1,P2,P3 call the same room \n
-     step 2: P2 mute \n
-     step 3:P3 mute \n
-     step 4: P2 unmute \n
-     step 5: P1 left \n
-     step 6: P2 left \n
-     step 7: P3 left
+     * step 1: P1,P2,P3 call the same room \n
+     * step 2: P2 mute \n
+     * step 3: P3 mute \n
+     * step 4: P2 unmute \n
+     * step 5: P1 left \n
+     * step 6: P2 left \n
+     * step 7: P3 left
      */
     public TestCaseSpaceCall3() {
         this.add(TestCaseSpaceCall3.TestActorCall3Person1.class);
@@ -33,7 +33,7 @@ public class TestCaseSpaceCall3 extends TestSuite {
     }
 
     @Description("TestActorCall3Person1")
-    public static class TestActorCall3Person1 extends RoomCallingTestActor{
+    public static class TestActorCall3Person1 extends RoomCallingTestActor {
         /**
          * Main test entrance
          */
@@ -41,15 +41,15 @@ public class TestCaseSpaceCall3 extends TestSuite {
         public void run() {
             super.run();
             actor = TestActor.SparkUser(activity, runner);
-            actor.loginBySparkId(TestActor.sparkUser1,TestActor.SPARK_USER_PASSWORD,this::onRegistered);
+            actor.loginBySparkId(TestActor.sparkUser1, TestActor.SPARK_USER_PASSWORD, this::onRegistered);
         }
 
         /**
-         *  Dial room when register complete
+         * Dial room when register complete
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b", result.isSuccessful());
             if (result.isSuccessful()) {
                 actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
@@ -59,7 +59,7 @@ public class TestCaseSpaceCall3 extends TestSuite {
         }
 
         @Override
-        protected void onCallMembershipChanged(CallObserver.CallEvent event){
+        protected void onCallMembershipChanged(CallObserver.CallEvent event) {
             super.onCallMembershipChanged(event);
             if (event instanceof CallObserver.MembershipSendingVideoEvent) {
                 CallMembership membership = ((CallObserver.MembershipSendingVideoEvent) event).getCallMembership();
@@ -90,19 +90,17 @@ public class TestCaseSpaceCall3 extends TestSuite {
         public void run() {
             super.run();
             actor = TestActor.SparkUser(activity, runner);
-            mHandler.postDelayed(()->
-                actor.loginBySparkId(TestActor.sparkUser2,TestActor.SPARK_USER_PASSWORD,this::onRegistered)
-            ,1000);
+            actor.loginBySparkId(TestActor.sparkUser2, TestActor.SPARK_USER_PASSWORD, this::onRegistered);
         }
 
         /**
-         *  Waiting for incoming call register complete
+         * Waiting for incoming call register complete
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b", result.isSuccessful());
             if (result.isSuccessful()) {
-                actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
+                actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
@@ -110,27 +108,27 @@ public class TestCaseSpaceCall3 extends TestSuite {
         }
 
         @Override
-        protected void onCallMembershipChanged(CallObserver.CallEvent event){
+        protected void onCallMembershipChanged(CallObserver.CallEvent event) {
             super.onCallMembershipChanged(event);
             if (event instanceof CallObserver.MembershipSendingVideoEvent) {
                 CallMembership membership = ((CallObserver.MembershipSendingVideoEvent) event).getCallMembership();
-                if(membership.getPersonId().equalsIgnoreCase(actor.sparkUserID3)
+                if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID3)
                         && membership.isSendingVideo() == false
-                        && this.person1Joined && this.person3Joined){
-                    mHandler.postDelayed(()-> {
+                        && this.person1Joined && this.person3Joined) {
+                    mHandler.postDelayed(() -> {
                         Ln.w("Call: Person2 start sending video");
                         event.getCall().setSendingVideo(true);
-                    },5000);
+                    }, 5000);
                 }
             } else if (event instanceof CallObserver.MembershipJoinedEvent
                     && this.person1Joined && this.person3Joined) {
-                mHandler.postDelayed(()-> {
+                mHandler.postDelayed(() -> {
                     Ln.w("Call: Person2 stop sending video");
                     event.getCall().setSendingVideo(false);
-                },5000);
+                }, 5000);
             } else if (event instanceof CallObserver.MembershipLeftEvent
                     && ((CallObserver.MembershipLeftEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID1)) {
-                if (this.person1Joined && this.person3Joined ) {
+                if (this.person1Joined && this.person3Joined) {
                     Ln.w("Call: Person2 Start Leaving");
                     hangupCall(event.getCall());
                 }
@@ -147,12 +145,12 @@ public class TestCaseSpaceCall3 extends TestSuite {
         protected void checkMemberships(Call call) {
             super.checkMemberships(call);
             if (this.person1Joined && this.person3Joined) {
-                mHandler.postDelayed(()-> {
+                mHandler.postDelayed(() -> {
                     Ln.w("Call: Person2 stop sending video");
                     call.setSendingVideo(false);
-                },5000);
+                }, 5000);
             }
-            for(CallMembership membership : call.getMemberships()) {
+            for (CallMembership membership : call.getMemberships()) {
                 if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID1)
                         && this.person1Joined && this.person3Joined
                         && membership.getState() == CallMembership.State.LEFT) {
@@ -173,19 +171,17 @@ public class TestCaseSpaceCall3 extends TestSuite {
         public void run() {
             super.run();
             actor = TestActor.SparkUser(activity, runner);
-            mHandler.postDelayed(()->
-            actor.loginBySparkId(TestActor.sparkUser3,TestActor.SPARK_USER_PASSWORD,this::onRegistered)
-                    ,2000);
+            actor.loginBySparkId(TestActor.sparkUser3, TestActor.SPARK_USER_PASSWORD, this::onRegistered);
         }
 
         /**
-         *  Dial room when register complete
+         * Dial room when register complete
          */
         @Override
         protected void onRegistered(Result result) {
-            Ln.w("Caller onRegistered result: %b" , result.isSuccessful());
+            Ln.w("Caller onRegistered result: %b", result.isSuccessful());
             if (result.isSuccessful()) {
-                actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID,MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
+                actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                         this::onCallSetup);
             } else {
                 Verify.verifyTrue(false);
@@ -193,11 +189,11 @@ public class TestCaseSpaceCall3 extends TestSuite {
         }
 
         @Override
-        protected void onCallMembershipChanged(CallObserver.CallEvent event){
+        protected void onCallMembershipChanged(CallObserver.CallEvent event) {
             super.onCallMembershipChanged(event);
             if (event instanceof CallObserver.MembershipSendingVideoEvent) {
                 CallMembership membership = ((CallObserver.MembershipSendingVideoEvent) event).getCallMembership();
-                if(membership.getPersonId().equalsIgnoreCase(actor.sparkUserID2)
+                if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID2)
                         && membership.isSendingVideo() == false) {
                     Ln.w("Call: Person3 stop sending video");
                     event.getCall().setSendingVideo(false);
@@ -205,7 +201,7 @@ public class TestCaseSpaceCall3 extends TestSuite {
             }
             if (event instanceof CallObserver.MembershipLeftEvent) {
                 if (((CallObserver.MembershipLeftEvent) event).getCallMembership().getPersonId().equalsIgnoreCase(actor.sparkUserID2)
-                        && this.person1Joined && this.person2Joined ) {
+                        && this.person1Joined && this.person2Joined) {
                     Ln.w("Call: Person2 Left Detected");
                     hangupCall(event.getCall());
                 }
@@ -221,13 +217,12 @@ public class TestCaseSpaceCall3 extends TestSuite {
         @Override
         protected void checkMemberships(Call call) {
             super.checkMemberships(call);
-            for(CallMembership membership:call.getMemberships()) {
+            for (CallMembership membership : call.getMemberships()) {
                 if (membership.getPersonId().equalsIgnoreCase(actor.sparkUserID2)) {
                     if (membership.getState() == CallMembership.State.LEFT) {
                         Ln.w("Call: Person3 hangup");
                         hangupCall(call);
-                    }
-                    else if(membership.isSendingVideo() == false && this.person1Joined && this.person2Joined){
+                    } else if (membership.isSendingVideo() == false && this.person1Joined && this.person2Joined) {
                         Ln.w("Call: Person3 stop sending video");
                         call.setSendingVideo(false);
                     }
