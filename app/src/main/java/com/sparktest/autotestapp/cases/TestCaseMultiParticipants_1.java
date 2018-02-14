@@ -120,7 +120,7 @@ public class TestCaseMultiParticipants_1 extends TestSuite {
                     actor.getPhone().dial(TestActor.jwtUser1,
                             MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                             this::onCallSetup);
-                }, 5000);
+                }, 15000);
             } else {
                 Verify.verifyTrue(false);
             }
