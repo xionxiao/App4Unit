@@ -68,6 +68,9 @@ public class TestCaseSpaceCall16 extends TestSuite {
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
             super.onDisconnected(event);
+            if (event instanceof CallObserver.LocalLeft) {
+                actor.logout();
+            }
         }
 
     }
@@ -81,9 +84,7 @@ public class TestCaseSpaceCall16 extends TestSuite {
         public void run() {
             super.run();
             actor = TestActor.SparkUser(activity, runner);
-            mHandler.postDelayed(() ->
-                            actor.loginBySparkId(TestActor.sparkUser2, TestActor.SPARK_USER_PASSWORD, this::onRegistered)
-                    , 1000);
+            actor.loginBySparkId(TestActor.sparkUser2, TestActor.SPARK_USER_PASSWORD, this::onRegistered);
         }
 
         /**
@@ -102,16 +103,17 @@ public class TestCaseSpaceCall16 extends TestSuite {
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
+            Ln.w("Caller onDisconnected: " + event.toString());
             if (event instanceof CallObserver.RemoteDecline) {
                 mHandler.postDelayed(() -> {
                     actor.getPhone().dial(actor.sparkUser3, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                             this::onCallSetup);
-                }, 3000);
+                }, 10000);
             } else if (event instanceof CallObserver.RemoteLeft) {
                 mHandler.postDelayed(() -> {
                     actor.getPhone().dial(actor.SPARK_ROOM_CALL_ROOM_ID2, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                             this::onCallSetup);
-                }, 3000);
+                }, 8000);
             } else {
                 super.onDisconnected(event);
                 actor.logout();
@@ -138,9 +140,7 @@ public class TestCaseSpaceCall16 extends TestSuite {
         public void run() {
             super.run();
             actor = TestActor.SparkUser(activity, runner);
-            mHandler.postDelayed(() ->
-                    actor.loginBySparkId(TestActor.sparkUser3, TestActor.SPARK_USER_PASSWORD, this::onRegistered)
-                    , 2000);
+            actor.loginBySparkId(TestActor.sparkUser3, TestActor.SPARK_USER_PASSWORD, this::onRegistered);
         }
 
         /**

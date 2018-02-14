@@ -124,16 +124,10 @@ public class TestCaseSpaceCall19 extends TestSuite {
                 @Override
                 public void onComplete(Result<Void> result) {
                     Ln.w("removePersonThreeFromRoom onComplete: " + result.isSuccessful());
-                    if (result.isSuccessful()) {
-                        mHandler.postDelayed(()->{
-                            hangupCall(call);
-                        },25000);
-                    }
-                    else {
-                        mHandler.postDelayed(()->{
-                            removePersonThreeFromRoom(call);
-                        },2000);
-                    }
+                    mHandler.postDelayed(()->{
+                        hangupCall(call);
+                        Ln.w("removePersonThreeFromRoom result:"+result.isSuccessful());
+                    },25000);
                 }
             });
         }

@@ -153,7 +153,7 @@ public class TestCaseSpaceCall23 extends TestSuite {
 
         @Override
         protected void onDisconnected(CallObserver.CallEvent event) {
-            super.onDisconnected(event);
+//            super.onDisconnected(event);
             if(event instanceof CallObserver.LocalLeft){
                 actor.logout();
             }

@@ -121,16 +121,8 @@ public class TestCaseSpaceCall18 extends TestSuite {
             actor.getSpark().memberships().delete(personThreeMembershipID, new CompletionHandler<Void>() {
                 @Override
                 public void onComplete(Result<Void> result) {
-                    if (result.isSuccessful()) {
-                        mHandler.postDelayed(()->{
-                            hangupCall(call);
-                        },25000);
-                    }
-                    else {
-                        mHandler.postDelayed(()->{
-                            removePersonThreeFromRoom(call);
-                        },2000);
-                    }
+                    hangupCall(call);
+                    Ln.w("removePersonThreeFromRoom result:"+result.isSuccessful());
                 }
             });
         }
