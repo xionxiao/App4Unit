@@ -21,9 +21,9 @@ import com.sparktest.autotestapp.utils.TestActor;
 public class TestCaseSpaceCall2 extends TestSuite {
 
     /**
-     * step 1:P1,P2,P3 call the same room \n
+     * step 1: P1,P2,P3 call the same room \n
      * step 2: P1 left \n
-     * step 3:P2 left \n
+     * step 3: P2 left \n
      * step 4: P1 call again \n
      * step 5: P3 left \n
      * step 6: P1 left
@@ -124,8 +124,7 @@ public class TestCaseSpaceCall2 extends TestSuite {
          */
         public void run() {
             actor = TestActor.SparkUser(activity, runner);
-            mHandler.postDelayed(() ->
-                    actor.loginBySparkId(TestActor.sparkUser2, TestActor.SPARK_USER_PASSWORD, this::onRegistered), 1000);
+            actor.loginBySparkId(TestActor.sparkUser2, TestActor.SPARK_USER_PASSWORD, this::onRegistered);
         }
 
         /**
@@ -184,8 +183,7 @@ public class TestCaseSpaceCall2 extends TestSuite {
         public void run() {
             super.run();
             actor = TestActor.SparkUser(activity, runner);
-            mHandler.postDelayed(() ->
-                    actor.loginBySparkId(TestActor.sparkUser3, TestActor.SPARK_USER_PASSWORD, this::onRegistered), 2000);
+            actor.loginBySparkId(TestActor.sparkUser3, TestActor.SPARK_USER_PASSWORD, this::onRegistered);
         }
 
         /**

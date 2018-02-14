@@ -123,7 +123,7 @@ public class TestCaseSpaceCall15 extends TestSuite {
                 mHandler.postDelayed(()-> {
                     actor.getPhone().dial(actor.sparkUser1, MediaOption.audioVideo(activity.mLocalSurface, activity.mRemoteSurface),
                             this::onCallSetup);
-                },5000);
+                },10000);
             } else {
                 Verify.verifyTrue(false);
             }
