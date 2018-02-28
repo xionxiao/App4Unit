@@ -142,7 +142,7 @@ public class AppTestRunner extends TestRunner {
             try {
                 // TODO: start calculate test method timeout
                 // long timeout = getAnnotationTimeout(testCase.getTestClass(), method);
-                long timeout = 90L * 1000;
+                long timeout = 300L * 1000;
                 timeoutRunnable = () -> {
                     Ln.e("*****************timeout*********");
                     Verify.fail("Timeout");

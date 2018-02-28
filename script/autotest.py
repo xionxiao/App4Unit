@@ -121,7 +121,7 @@ class Device:
         print("-- %s : %s : %s" % (c_name, elapsed, result))
         return c_name, p, elapsed, result
 
-    @loop(1, 100)
+    @loop(1, 600)
     def check_result(self, button):
         return False if button.text == "RUNNING" else button.text
 
