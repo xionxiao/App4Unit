@@ -1,13 +1,13 @@
 package com.sparktest.autotestapp.framework;
 
-
-import com.github.benoitdion.ln.Ln;
-
+import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+
 public class TestResult {
+    private static final String TAG = "TestResult";
     protected List<TestListener> listeners = new ArrayList<>();
     protected CopyOnWriteArrayList<TestFailure> failures = new CopyOnWriteArrayList<>();
 
@@ -65,42 +65,42 @@ public class TestResult {
     }
 
     public void fireTestSuiteStarted() {
-        Ln.e("fireTestSuiteStarted");
+        Log.d(TAG, "fireTestSuiteStarted");
         fire(listener -> listener.testSuiteStarted(null));
     }
 
     public void fireTestSuiteFinished() {
-        Ln.e("fireTestSuiteFinished");
+        Log.d(TAG, "fireTestSuiteFinished");
         fire(listener -> listener.testSuiteFinished(null));
     }
 
     public void fireTestRunStarted() {
-        Ln.e("fireTestRunStarted");
+        Log.d(TAG, "fireTestRunStarted");
         fire(listener -> listener.testRunStarted(null));
     }
 
     public void fireTestRunFinished() {
-        Ln.e("fireTestRunFinished");
+        Log.d(TAG, "fireTestRunFinished");
         fire(listener -> listener.testRunFinished(null));
     }
 
     public void fireTestStarted() {
-        Ln.e("fireTestStarted");
+        Log.d(TAG, "fireTestStarted");
         fire(listener -> listener.testStarted(null));
     }
 
     public void fireTestFinished() {
-        Ln.e("fireTestFinished");
+        Log.e(TAG, "fireTestFinished");
         fire(listener -> listener.testFinished(null));
     }
 
     public void fireTestFailed() {
-        Ln.e("fireTestFailed");
+        Log.d(TAG, "fireTestFailed");
         fire(listener -> listener.testFailure(null));
     }
 
     public void fireTestIgnored() {
-        Ln.e("fireTestIgnored");
+        Log.d(TAG, "fireTestIgnored");
         fire(listener -> listener.testRunFinished(null));
     }
 }

@@ -23,49 +23,12 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.sparktest.autotestapp.cases.TestCaseAudioCall;
-import com.sparktest.autotestapp.cases.TestCaseAudioCallUnmuteVideo;
-import com.sparktest.autotestapp.cases.TestCaseCallRejectWhenInit;
-import com.sparktest.autotestapp.cases.TestCaseCallRejectWhenRinging;
-import com.sparktest.autotestapp.cases.TestCaseCallSequence_1;
-import com.sparktest.autotestapp.cases.TestCaseCallSequence_2;
-import com.sparktest.autotestapp.cases.TestCaseCallWhenConnected;
-import com.sparktest.autotestapp.cases.TestCaseCallWhenRinging;
-import com.sparktest.autotestapp.cases.TestCaseHangUpDisconnectedCall;
-import com.sparktest.autotestapp.cases.TestCaseKeepCall;
-import com.sparktest.autotestapp.cases.TestCaseMuteAudioVideo;
-import com.sparktest.autotestapp.cases.TestCaseTeamAndMemberShip;
-import com.sparktest.autotestapp.cases.TestCaseWebhooks;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall1;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall10;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall11;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall12;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall13;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall14;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall15;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall16;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall17;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall18;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall19;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall2;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall20;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall21;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall22;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall23;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall3;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall4;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall5;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall6;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall7;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall8;
-import com.sparktest.autotestapp.cases.roomCallCases.TestCaseSpaceCall9;
 import com.sparktest.autotestapp.framework.Test;
 import com.sparktest.autotestapp.framework.TestCase;
 import com.sparktest.autotestapp.framework.TestRunner;
 import com.sparktest.autotestapp.framework.TestState;
 import com.sparktest.autotestapp.framework.TestSuite;
 import com.sparktest.autotesteapp.R;
-import com.webex.wseclient.WseSurfaceView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,8 +40,6 @@ import dagger.ObjectGraph;
 public class TestActivity extends Activity {
 
     public ListView mListView;
-    public WseSurfaceView mRemoteSurface;
-    public WseSurfaceView mLocalSurface;
 
     public Handler mHandler;
     public List<TestSuite> mSuites;
@@ -92,9 +53,7 @@ public class TestActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_test);
-        mListView = (ListView) findViewById(R.id.testcaseListView);
-        mRemoteSurface = (WseSurfaceView) findViewById(R.id.remoteView);
-        mLocalSurface = (WseSurfaceView) findViewById(R.id.localView);
+        mListView = findViewById(R.id.testcaseListView);
         Handler.Callback callback = (msg) -> {
             if (msg.what == FINISH) update();
             return true;
@@ -107,47 +66,6 @@ public class TestActivity extends Activity {
         ((AppTestRunner) mRunner).setInjector(objectGraph);
 
         mSuites = new ArrayList<>();
-
-        mSuites.add(new TestCaseSpaceCall1());
-        mSuites.add(new TestCaseSpaceCall2());
-        mSuites.add(new TestCaseSpaceCall3());
-        mSuites.add(new TestCaseSpaceCall4());
-        mSuites.add(new TestCaseSpaceCall5());
-        mSuites.add(new TestCaseSpaceCall6());
-        mSuites.add(new TestCaseSpaceCall7());
-        mSuites.add(new TestCaseSpaceCall8());
-        mSuites.add(new TestCaseSpaceCall9());
-        mSuites.add(new TestCaseSpaceCall10());
-        mSuites.add(new TestCaseSpaceCall11());
-        mSuites.add(new TestCaseSpaceCall12());
-        mSuites.add(new TestCaseSpaceCall13());
-        mSuites.add(new TestCaseSpaceCall14());
-        mSuites.add(new TestCaseSpaceCall15());
-        mSuites.add(new TestCaseSpaceCall16());
-        mSuites.add(new TestCaseSpaceCall17());
-        mSuites.add(new TestCaseSpaceCall18());
-        mSuites.add(new TestCaseSpaceCall19());
-        mSuites.add(new TestCaseSpaceCall20());
-        mSuites.add(new TestCaseSpaceCall21());
-        mSuites.add(new TestCaseSpaceCall22());
-        mSuites.add(new TestCaseSpaceCall23());
-
-        mSuites.add(new TestCaseCallWhenRinging());
-        mSuites.add(new TestCaseCallWhenConnected());
-        mSuites.add(new TestCaseCallRejectWhenRinging());
-        mSuites.add(new TestCaseCallRejectWhenInit());
-        mSuites.add(new TestCaseHangUpDisconnectedCall());
-        mSuites.add(new TestCaseAudioCall());
-        mSuites.add(new TestCaseAudioCallUnmuteVideo());
-        mSuites.add(new TestCaseMuteAudioVideo());
-        //mSuites.add(new TestCaseRoom());
-        mSuites.add(new TestCaseWebhooks());
-        mSuites.add(new TestCaseTeamAndMemberShip());
-        //mSuites.add(new TestCaseMultiParticipants_1());
-        //mSuites.add(new TestCaseMultiParticipants_2());
-        mSuites.add(new TestCaseCallSequence_1());
-        mSuites.add(new TestCaseCallSequence_2());
-        mSuites.add(new TestCaseKeepCall());
 
         TestCaseAdapter adapter = new TestCaseAdapter(this, mSuites);
         mListView.setAdapter(adapter);

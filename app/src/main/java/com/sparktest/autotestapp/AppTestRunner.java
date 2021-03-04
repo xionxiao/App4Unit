@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 
-import com.github.benoitdion.ln.Ln;
 import com.sparktest.autotestapp.framework.TestCase;
 import com.sparktest.autotestapp.framework.TestFailure;
 import com.sparktest.autotestapp.framework.TestListener;
@@ -35,6 +34,9 @@ public class AppTestRunner extends TestRunner {
     private TestCase runningTest;
     private Handler handler;
 
+    public void setInjector(ObjectGraph injector) {
+        this.injector = injector;
+    }
 
     public AppTestRunner(Context context) {
         this.activity = (TestActivity) context;
@@ -79,10 +81,6 @@ public class AppTestRunner extends TestRunner {
         if (testCase.getState().equals(TestState.Failed)) {
             throw new Error("********** Failed ***********");
         }
-    }
-
-    public void setInjector(ObjectGraph injector) {
-        this.injector = injector;
     }
 
     protected void run(TestCase testCase, TestResult result) {
@@ -144,11 +142,10 @@ public class AppTestRunner extends TestRunner {
                 // long timeout = getAnnotationTimeout(testCase.getTestClass(), method);
                 long timeout = 300L * 1000;
                 timeoutRunnable = () -> {
-                    Ln.e("*****************timeout*********");
                     Verify.fail("Timeout");
                 };
                 if (timeout > 0) {
-                    mainHandler.postDelayed( timeoutRunnable, timeout);
+                    mainHandler.postDelayed(timeoutRunnable, timeout);
                 }
                 // Test
                 invokeMethod(testCase, instance, method);
