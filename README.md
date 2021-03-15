@@ -1,6 +1,6 @@
 # AutoTestApp
 
-JUnit like automatic testing application framework. Support Appuim.
+JUnit like automatic testing application framework.
 
 ## Setup
 
@@ -11,6 +11,7 @@ JUnit like automatic testing application framework. Support Appuim.
     <https://developer.android.com/studio/index.html>
 
 - JUnit 4.12
+- Appium
 
 ### 2. Compile & Run
 
@@ -109,7 +110,7 @@ runner.run(suite);
 
 ### Asserts
 
-This test framework reuses [org.junit.Assert] as it's assertion mechanism. To use assertion in TestCase:
+This test framework reuses [org.junit.Assert] as it's assertion mechanism. To use assertion in TestCase:
 
 ### Assertions
 
