@@ -1,8 +1,8 @@
 # AutoTestApp
 
-Automatic testing application framework for Spark android SDK.
+JUnit like automatic testing application framework. Support Appuim.
 
-## Setup 
+## Setup
 
 ### 1. Pre-request
 
@@ -39,7 +39,9 @@ Clone the repo and import to Android Studio. Connect real device and Run AutoTes
     ```shell
     python script/autotest.py -d <device serail numbers seperated by comma>
     ```
+
     for more information execute
+
     ```shell
     python script/autotest.py -h
     ```
@@ -108,6 +110,7 @@ runner.run(suite);
 ### Asserts
 
 This test framework reuses [org.junit.Assert] as it's assertion mechanism. To use assertion in TestCase:
+
 ### Assertions
 
 ```java
@@ -159,7 +162,6 @@ public class TestTest {
     }
 }
 ```
-
 
 ## Annotations
 
