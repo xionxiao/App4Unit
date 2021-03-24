@@ -1,6 +1,6 @@
 # AutoTestApp
 
-JUnit like automatic testing application framework.
+JUnit like automatic testing application framework. This framework can help developers to build test applications use JUnit like style. It also contains Appium script for automation test and build test matrix.
 
 ## Setup
 
