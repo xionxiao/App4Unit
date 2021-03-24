@@ -1,4 +1,4 @@
-# AutoTestApp
+# App4Unit
 
 JUnit like automatic testing application framework. This framework can help developers to build real test applications and create test cases using JUnit like style. It also contains Appium script for automation test and build test matrix.
 
